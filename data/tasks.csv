@@ -1,0 +1,21 @@
+task_id,family,label,description,reference_config,in_app
+chat_short,text,Short chat answer,"One short exchange with a chat assistant (~100-500 input tokens, ~250-500 visible output tokens, no extended reasoning).","Default model of a major consumer assistant (ChatGPT, Gemini, Claude) in 2025-2026, or a generic frontier-scale (>200B) production estimate; first-hand point estimate.",yes
+chat_medium,text,Longer chat answer,"~1k input and ~1k output tokens, no extended reasoning.",Default assistant models as for chat_short.,no
+chat_reasoning,text,Reasoning answer,Answer from a reasoning model or reasoning mode; includes hidden reasoning tokens.,"All reasoning-model rows at the medium prompt size, plus generic test-time-scaling estimates.",yes
+long_document,text,Chat over a long document,"~10k input tokens (~7,500 words) with ~500-1,500 output tokens.",Default assistant models plus generic frontier estimates.,yes
+very_long_input,text,Very long input,~100k input tokens.,All first-hand rows.,no
+ai_search_query,text,AI-generated search answer,A web search answered by an LLM.,None (historical scenario only).,no
+agentic_task,agentic,One task delegated to an AI agent,"One user prompt to a coding or computer-use agent, including every model call and tool step it triggers.",All first-hand rows.,yes
+agentic_coding_session,agentic,One coding-agent session,A full coding-agent session made of many prompts and model calls.,First-hand rows only.,no
+agentic_coding_day,agentic,One developer-day of coding agents,Daily coding-agent use by one developer.,First-hand rows only.,no
+image_generation,image,Generate one image,One image at ~1024x1024 or the model's default size.,"Measured open text-to-image models (task-level medians accepted); per-model rows and task medians, not task means.",yes
+video_generation,video,Generate one short video,One clip of a few seconds.,Clips >= 4.5 s at >= 15 fps from models >= 5B parameters or described as higher quality.,yes
+text_classification,classic,Text classification,One inference.,Single source.,no
+extractive_qa,classic,Extractive question answering,One inference.,Single source.,no
+masked_lm,classic,Masked language modelling,One inference.,Single source.,no
+token_classification,classic,Token classification,One inference.,Single source.,no
+image_classification,classic,Image classification,One inference.,Single source.,no
+object_detection,classic,Object detection,One inference.,Single source.,no
+text_generation_10tok,classic,Short text generation (10 tokens),One inference generating 10 new tokens.,Single source.,no
+summarization,classic,Summarization,One inference.,Single source.,no
+image_captioning,classic,Image captioning,One inference.,Single source.,no

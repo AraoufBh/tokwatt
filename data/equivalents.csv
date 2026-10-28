@@ -1,0 +1,11 @@
+eq_id,label,energy_wh,per,basis,source_id,notes
+TWQ01,Full smartphone charge,22,charge,reference_value,EPA_EQUIV,0.022 kWh as cited in LUCCIONI2024; earlier EPA value 0.012 kWh.
+TWQ02,Average US household electricity,28767,day,derived,EPOCH2025,"10,500 kWh/yr (EIA, cited by EPOCH2025) / 365."
+TWQ03,"Microwave oven at 1,000 W",16.667,minute,physics_assumed_power,,"1,000 W x 1/60 h."
+TWQ04,10 W LED bulb,10,hour,physics_assumed_power,,
+TWQ05,Television at ~100 W,1.667,minute,assumption,GOOGLE2025,GOOGLE2025 uses ~100 W for a modern TV (citing EnergySage).
+TWQ06,E-bike,15.53,km,assumption,MITTR2025,25 Wh per mile (MITTR2025 methodology).
+TWQ07,Google web search (2009 figure),0.3,search,reference_value,GOOGLE2009,Historical; cited by EPOCH2025 and DEVRIES2023.
+TWQ08,"Boiling 1 litre of water (20 to 100 C, no losses)",93.0,litre,physics,,4.186 kJ/(kg K) x 80 K / 3.6 kJ per Wh.
+TWQ09,Large nuclear reactor (~1 GW electric),1000000000,hour,convention,,Round 1 GW used as the reactor unit.
+TWQ10,Average US household electricity,10500000,year,reference_value,EPOCH2025,"10,500 kWh/yr (EIA, cited by EPOCH2025)."

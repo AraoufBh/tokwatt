@@ -1,0 +1,380 @@
+\begin{thebibliography}{44}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{AI Energy Score}(2025)]{aienergyscore2025}
+{AI Energy Score}.
+\newblock {AI Energy Score}: Initiative to establish comparable energy
+  efficiency ratings for {AI} models.
+\newblock Hugging Face, 2025.
+\newblock URL \url{https://huggingface.github.io/AIEnergyScore/}.
+\newblock Accessed 27 October 2026.
+
+\bibitem[Altman(2025)]{altman2025gentle}
+Sam Altman.
+\newblock {The Gentle Singularity}.
+\newblock Blog post, June 2025.
+\newblock URL \url{https://blog.samaltman.com/the-gentle-singularity}.
+\newblock Published 10 June 2025.
+
+\bibitem[Bahi(2026)]{bahi2026tokwatt}
+Abderaouf Bahi.
+\newblock {TokWatt}: an open, boundary-annotated database of {AI} inference
+  energy.
+\newblock Data set, version 0.1.0, 2026.
+\newblock URL \url{https://github.com/USERNAME/tokwatt}.
+
+\bibitem[Chung et~al.(2025)Chung, Ma, Wu, Liu, Kweon, Xia, Wu, and
+  Chowdhury]{chung2025mlenergy}
+Jae-Won Chung, Jeff~J. Ma, Ruofan Wu, Jiachen Liu, Oh~Jun Kweon, Yuxuan Xia,
+  Zhiyu Wu, and Mosharaf Chowdhury.
+\newblock The {ML.ENERGY} benchmark: Toward automated inference energy
+  measurement and optimization.
+\newblock In \emph{Conference on Neural Information Processing Systems (NeurIPS
+  2025)}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.06371}.
+\newblock Spotlight poster. arXiv:2505.06371.
+
+\bibitem[Couch(2026)]{couch2026agents}
+Simon~P. Couch.
+\newblock Electricity use of {AI} coding agents.
+\newblock Blog post, January 2026.
+\newblock URL \url{https://simonpcouch.com/blog/2026-01-20-cc-impact/}.
+\newblock Published 20 January 2026.
+
+\bibitem[Courty et~al.(2026)Courty, Schmidt, et~al.]{courty2026codecarbon}
+Beno{\^\i}t Courty, Victor Schmidt, et~al.
+\newblock {CodeCarbon}.
+\newblock Software, version 3.2.8, 2026.
+\newblock URL \url{https://doi.org/10.5281/zenodo.20584960}.
+
+\bibitem[de~Vries(2023)]{devries2023growing}
+Alex de~Vries.
+\newblock The growing energy footprint of artificial intelligence.
+\newblock \emph{Joule}, 7\penalty0 (10):\penalty0 2191--2194, 2023.
+\newblock \doi{10.1016/j.joule.2023.09.004}.
+
+\bibitem[Delavande et~al.(2025)Delavande, Luccioni, and
+  Pierrard]{delavande2025videoblog}
+Julien Delavande, Sasha Luccioni, and R{\'e}gis Pierrard.
+\newblock How much power does a {SOTA} open video model use?
+\newblock Hugging Face blog, July 2025.
+\newblock URL
+  \url{https://huggingface.co/blog/jdelavande/text-to-video-energy-cost}.
+\newblock Published 2 July 2025.
+
+\bibitem[Desislavov et~al.(2023)Desislavov, Mart{\'\i}nez-Plumed, and
+  Hern{\'a}ndez-Orallo]{desislavov2023trends}
+Radosvet Desislavov, Fernando Mart{\'\i}nez-Plumed, and Jos{\'e}
+  Hern{\'a}ndez-Orallo.
+\newblock Trends in {AI} inference energy consumption: Beyond the
+  performance-vs-parameter laws of deep learning.
+\newblock \emph{Sustainable Computing: Informatics and Systems}, 38:\penalty0
+  100857, 2023.
+\newblock \doi{10.1016/j.suscom.2023.100857}.
+
+\bibitem[Dodge et~al.(2022)Dodge, Prewitt, Tachet~des Combes, Odmark, Schwartz,
+  Strubell, Luccioni, Smith, DeCario, and Buchanan]{dodge2022measuring}
+Jesse Dodge, Taylor Prewitt, Remi Tachet~des Combes, Erika Odmark, Roy
+  Schwartz, Emma Strubell, Alexandra~Sasha Luccioni, Noah~A. Smith, Nicole
+  DeCario, and Will Buchanan.
+\newblock Measuring the carbon intensity of {AI} in cloud instances.
+\newblock In \emph{Proceedings of the 2022 ACM Conference on Fairness,
+  Accountability, and Transparency (FAccT '22)}, pages 1877--1894. ACM, 2022.
+\newblock \doi{10.1145/3531146.3533234}.
+
+\bibitem[Elsworth et~al.(2025)Elsworth, Huang, Patterson, Schneider, Sedivy,
+  Goodman, Townsend, Ranganathan, Dean, Vahdat, Gomes, and
+  Manyika]{elsworth2025measuring}
+Cooper Elsworth, Keguo Huang, David Patterson, Ian Schneider, Robert Sedivy,
+  Savannah Goodman, Ben Townsend, Parthasarathy Ranganathan, Jeff Dean, Amin
+  Vahdat, Ben Gomes, and James Manyika.
+\newblock Measuring the environmental impact of delivering {AI} at {Google}
+  scale.
+\newblock arXiv:2508.15734, 2025.
+\newblock URL \url{https://arxiv.org/abs/2508.15734}.
+
+\bibitem[Faiz et~al.(2024)Faiz, Kaneda, Wang, Osi, Sharma, Chen, and
+  Jiang]{faiz2024llmcarbon}
+Ahmad Faiz, Sotaro Kaneda, Ruhan Wang, Rita Osi, Prateek Sharma, Fan Chen, and
+  Lei Jiang.
+\newblock {LLMCarbon}: Modeling the end-to-end carbon footprint of large
+  language models.
+\newblock In \emph{International Conference on Learning Representations (ICLR
+  2024)}, pages 24727--24741, 2024.
+\newblock URL \url{https://arxiv.org/abs/2309.14393}.
+
+\bibitem[Fernandez et~al.(2025)Fernandez, Na, Tiwari, Bisk, Luccioni, and
+  Strubell]{fernandez2025energy}
+Jared Fernandez, Clara Na, Vashisth Tiwari, Yonatan Bisk, Sasha Luccioni, and
+  Emma Strubell.
+\newblock Energy considerations of large language model inference and
+  efficiency optimizations.
+\newblock In \emph{Proceedings of the 63rd Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers)}, pages 32556--32569,
+  Vienna, Austria, 2025. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2025.acl-long.1563}.
+
+\bibitem[{Gartner}(2026)]{gartner2026dc}
+{Gartner}.
+\newblock Gartner says data center electricity consumption to grow 26\% in
+  2026.
+\newblock Press release, Stamford, CT, June 2026.
+\newblock URL
+  \url{https://www.gartner.com/en/newsroom/press-releases/2026-06-10-gartner-says-data-center-electricity-demand-to-grow-26-percent-in-2026}.
+\newblock Published 10 June 2026.
+
+\bibitem[Gebru et~al.(2021)Gebru, Morgenstern, Vecchione, Vaughan, Wallach,
+  {Daum{\'e} III}, and Crawford]{gebru2021datasheets}
+Timnit Gebru, Jamie Morgenstern, Briana Vecchione, Jennifer~Wortman Vaughan,
+  Hanna Wallach, Hal {Daum{\'e} III}, and Kate Crawford.
+\newblock Datasheets for datasets.
+\newblock \emph{Communications of the ACM}, 64\penalty0 (12):\penalty0 86--92,
+  2021.
+\newblock \doi{10.1145/3458723}.
+
+\bibitem[{Google}(2009)]{google2009search}
+{Google}.
+\newblock Powering a {Google} search.
+\newblock Official Google Blog, January 2009.
+\newblock URL
+  \url{https://googleblog.blogspot.com/2009/01/powering-google-search.html}.
+\newblock Published 11 January 2009.
+
+\bibitem[{gwittebolle}(2026)]{gwittebolle2026claudecarbon}
+{gwittebolle}.
+\newblock How much {CO2} does a {Claude Code} session actually emit?
+\newblock DEV Community, 2026.
+\newblock URL
+  \url{https://dev.to/gwittebolle/how-much-co2-does-a-claude-code-session-actually-emit-1gna}.
+
+\bibitem[Hausfather(2026)]{hausfather2026agentic}
+Zeke Hausfather.
+\newblock The real energy use of agentic {AI}.
+\newblock The Climate Brink, August 2026.
+\newblock URL
+  \url{https://www.theclimatebrink.com/p/the-real-energy-use-of-agentic-ai}.
+\newblock Published 5 August 2026.
+
+\bibitem[Henderson et~al.(2020)Henderson, Hu, Romoff, Brunskill, Jurafsky, and
+  Pineau]{henderson2020towards}
+Peter Henderson, Jieru Hu, Joshua Romoff, Emma Brunskill, Dan Jurafsky, and
+  Joelle Pineau.
+\newblock Towards the systematic reporting of the energy and carbon footprints
+  of machine learning.
+\newblock \emph{Journal of Machine Learning Research}, 21\penalty0
+  (248):\penalty0 1--43, 2020.
+\newblock URL \url{https://jmlr.org/papers/v21/20-312.html}.
+
+\bibitem[Hodge(2025)]{hodge2025eia}
+Tyler Hodge.
+\newblock Forecast wholesale power prices and retail electricity prices rise
+  modestly in 2025.
+\newblock Today in Energy, U.S. Energy Information Administration, January
+  2025.
+\newblock URL \url{https://www.eia.gov/TODAYinENERGY/detail.php?id=64384}.
+\newblock Published 27 January 2025.
+
+\bibitem[{International Energy Agency}(2025)]{iea2025energyai}
+{International Energy Agency}.
+\newblock Energy and {AI}.
+\newblock Report, IEA, Paris, April 2025.
+\newblock URL \url{https://www.iea.org/reports/energy-and-ai}.
+
+\bibitem[{International Organization for Standardization}(2006)]{iso14040}
+{International Organization for Standardization}.
+\newblock {ISO 14040:2006 Environmental management -- Life cycle assessment --
+  Principles and framework}.
+\newblock ISO, Geneva, 2006.
+
+\bibitem[{ISO/IEC}(2016)]{iso30134}
+{ISO/IEC}.
+\newblock {ISO/IEC 30134-2:2016 Information technology -- Data centres -- Key
+  performance indicators -- Part 2: Power usage effectiveness (PUE)}.
+\newblock ISO, Geneva, 2016.
+
+\bibitem[Jegham et~al.(2025)Jegham, Abdelatti, Koh, Elmoubarki, and
+  Hendawi]{jegham2025hungry}
+Nidhal Jegham, Marwan Abdelatti, Chan~Young Koh, Lassad Elmoubarki, and
+  Abdeltawab Hendawi.
+\newblock How hungry is {AI}? {Benchmarking} energy, water, and carbon
+  footprint of {LLM} inference.
+\newblock arXiv:2505.09598, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.09598}.
+\newblock Values in TokWatt were transcribed from version~5; a spot check of
+  version~6 (24 November 2025) found identical values.
+
+\bibitem[Lacoste et~al.(2019)Lacoste, Luccioni, Schmidt, and
+  Dandres]{lacoste2019quantifying}
+Alexandre Lacoste, Alexandra Luccioni, Victor Schmidt, and Thomas Dandres.
+\newblock Quantifying the carbon emissions of machine learning.
+\newblock arXiv:1910.09700, 2019.
+\newblock URL \url{https://arxiv.org/abs/1910.09700}.
+
+\bibitem[Lannelongue et~al.(2021)Lannelongue, Grealey, and
+  Inouye]{lannelongue2021green}
+Lo{\"\i}c Lannelongue, Jason Grealey, and Michael Inouye.
+\newblock {Green Algorithms}: Quantifying the carbon footprint of computation.
+\newblock \emph{Advanced Science}, 8\penalty0 (12):\penalty0 2100707, 2021.
+\newblock \doi{10.1002/advs.202100707}.
+
+\bibitem[Li et~al.(2025)Li, Yang, Islam, and Ren]{li2025thirsty}
+Pengfei Li, Jianyi Yang, Mohammad~A. Islam, and Shaolei Ren.
+\newblock Making {AI} less `thirsty'.
+\newblock \emph{Communications of the ACM}, 68\penalty0 (7):\penalty0 54--61,
+  2025.
+\newblock \doi{10.1145/3724499}.
+
+\bibitem[Luccioni et~al.(2023)Luccioni, Viguier, and
+  Ligozat]{luccioni2023estimating}
+Alexandra~Sasha Luccioni, Sylvain Viguier, and Anne-Laure Ligozat.
+\newblock Estimating the carbon footprint of {BLOOM}, a {176B} parameter
+  language model.
+\newblock \emph{Journal of Machine Learning Research}, 24\penalty0
+  (253):\penalty0 1--15, 2023.
+\newblock URL \url{https://jmlr.org/papers/v24/23-0069.html}.
+
+\bibitem[Luccioni et~al.(2024)Luccioni, Jernite, and
+  Strubell]{luccioni2024power}
+Sasha Luccioni, Yacine Jernite, and Emma Strubell.
+\newblock Power hungry processing: Watts driving the cost of {AI} deployment?
+\newblock In \emph{Proceedings of the 2024 ACM Conference on Fairness,
+  Accountability, and Transparency (FAccT '24)}, pages 85--99, New York, NY,
+  USA, 2024. ACM.
+\newblock \doi{10.1145/3630106.3658542}.
+
+\bibitem[Masanet et~al.(2020)Masanet, Shehabi, Lei, Smith, and
+  Koomey]{masanet2020recalibrating}
+Eric Masanet, Arman Shehabi, Nuoa Lei, Sarah Smith, and Jonathan Koomey.
+\newblock Recalibrating global data center energy-use estimates.
+\newblock \emph{Science}, 367\penalty0 (6481):\penalty0 984--986, 2020.
+\newblock \doi{10.1126/science.aba3758}.
+
+\bibitem[{Mistral AI}(2025)]{mistral2025lca}
+{Mistral AI}.
+\newblock Our contribution to a global environmental standard for {AI}.
+\newblock Mistral AI news, July 2025.
+\newblock URL
+  \url{https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai}.
+\newblock Published 22 July 2025. Life-cycle analysis with Carbone~4 and ADEME.
+
+\bibitem[O'Donnell and Crownhart(2025)]{odonnell2025math}
+James O'Donnell and Casey Crownhart.
+\newblock We did the math on {AI}'s energy footprint. {Here}'s the story you
+  haven't heard.
+\newblock MIT Technology Review, May 2025.
+\newblock URL
+  \url{https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/}.
+\newblock Published 20 May 2025.
+
+\bibitem[{Our World in Data}(2026)]{owid2026energy}
+{Our World in Data}.
+\newblock Energy dataset ({owid/energy-data}), variable
+  {carbon\_intensity\_elec}.
+\newblock GitHub repository; underlying electricity data from Ember, 2026.
+\newblock URL \url{https://github.com/owid/energy-data}.
+\newblock Accessed 25 October 2026.
+
+\bibitem[Oviedo et~al.(2026)Oviedo, Kazhamiaka, Choukse, Kim, Luers, Nakagawa,
+  Bianchini, and Lavista~Ferres]{oviedo2026energy}
+Felipe Oviedo, Fiodar Kazhamiaka, Esha Choukse, Allen Kim, Amy Luers, Melanie
+  Nakagawa, Ricardo Bianchini, and Juan~M. Lavista~Ferres.
+\newblock Energy use of {AI} inference, efficiency pathways, and test-time
+  scaling.
+\newblock \emph{Joule}, 10\penalty0 (8):\penalty0 102430, 2026.
+\newblock \doi{10.1016/j.joule.2026.102430}.
+
+\bibitem[Patterson et~al.(2021)Patterson, Gonzalez, Le, Liang, Munguia,
+  Rothchild, So, Texier, and Dean]{patterson2021carbon}
+David Patterson, Joseph Gonzalez, Quoc Le, Chen Liang, Lluis-Miquel Munguia,
+  Daniel Rothchild, David So, Maud Texier, and Jeff Dean.
+\newblock Carbon emissions and large neural network training.
+\newblock arXiv:2104.10350, 2021.
+\newblock URL \url{https://arxiv.org/abs/2104.10350}.
+
+\bibitem[Patterson et~al.(2022)Patterson, Gonzalez, H{\"o}lzle, Le, Liang,
+  Munguia, Rothchild, So, Texier, and Dean]{patterson2022carbon}
+David Patterson, Joseph Gonzalez, Urs H{\"o}lzle, Quoc Le, Chen Liang,
+  Lluis-Miquel Munguia, Daniel Rothchild, David~R. So, Maud Texier, and Jeff
+  Dean.
+\newblock The carbon footprint of machine learning training will plateau, then
+  shrink.
+\newblock \emph{Computer}, 55\penalty0 (7):\penalty0 18--28, 2022.
+\newblock \doi{10.1109/MC.2022.3148714}.
+
+\bibitem[Rinc{\'e} and Banse(2025)]{rince2025ecologits}
+Samuel Rinc{\'e} and Adrien Banse.
+\newblock {EcoLogits}: Evaluating the environmental impacts of generative {AI}.
+\newblock \emph{Journal of Open Source Software}, 10\penalty0 (111):\penalty0
+  7471, 2025.
+\newblock \doi{10.21105/joss.07471}.
+
+\bibitem[Samsi et~al.(2023)Samsi, Zhao, McDonald, Li, Michaleas, Jones,
+  Bergeron, Kepner, Tiwari, and Gadepally]{samsi2023words}
+Siddharth Samsi, Dan Zhao, Joseph McDonald, Baolin Li, Adam Michaleas, Michael
+  Jones, William Bergeron, Jeremy Kepner, Devesh Tiwari, and Vijay Gadepally.
+\newblock From words to watts: Benchmarking the energy costs of large language
+  model inference.
+\newblock In \emph{2023 IEEE High Performance Extreme Computing Conference
+  (HPEC)}, pages 1--9, 2023.
+\newblock \doi{10.1109/HPEC58863.2023.10363447}.
+
+\bibitem[Schwartz et~al.(2020)Schwartz, Dodge, Smith, and
+  Etzioni]{schwartz2020green}
+Roy Schwartz, Jesse Dodge, Noah~A. Smith, and Oren Etzioni.
+\newblock Green {AI}.
+\newblock \emph{Communications of the ACM}, 63\penalty0 (12):\penalty0 54--63,
+  2020.
+\newblock \doi{10.1145/3381831}.
+
+\bibitem[Shehabi et~al.(2024)Shehabi, Smith, Hubbard, Newkirk, Lei, Siddik,
+  Holecek, Koomey, Masanet, and Sartor]{shehabi2024lbnl}
+Arman Shehabi, Sarah~J. Smith, Alex Hubbard, Alexander Newkirk, Nuoa Lei,
+  Md~Abu~Bakar Siddik, Billie Holecek, Jonathan Koomey, Eric Masanet, and Dale
+  Sartor.
+\newblock 2024 {United States} data center energy usage report.
+\newblock Report, Lawrence Berkeley National Laboratory, Berkeley, CA, December
+  2024.
+\newblock URL \url{https://doi.org/10.71468/P1WC7Q}.
+
+\bibitem[Strubell et~al.(2019)Strubell, Ganesh, and
+  McCallum]{strubell2019energy}
+Emma Strubell, Ananya Ganesh, and Andrew McCallum.
+\newblock Energy and policy considerations for deep learning in {NLP}.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics}, pages 3645--3650. Association for
+  Computational Linguistics, 2019.
+\newblock \doi{10.18653/v1/P19-1355}.
+
+\bibitem[Wilkinson et~al.(2016)Wilkinson, Dumontier, Aalbersberg, Appleton,
+  Axton, et~al.]{wilkinson2016fair}
+Mark~D. Wilkinson, Michel Dumontier, IJsbrand~Jan Aalbersberg, Gabrielle
+  Appleton, Myles Axton, et~al.
+\newblock The {FAIR} guiding principles for scientific data management and
+  stewardship.
+\newblock \emph{Scientific Data}, 3:\penalty0 160018, 2016.
+\newblock \doi{10.1038/sdata.2016.18}.
+
+\bibitem[Wu et~al.(2022)Wu, Raghavendra, Gupta, Acun, Ardalani, Maeng, Chang,
+  Aga, Huang, Bai, et~al.]{wu2022sustainable}
+Carole-Jean Wu, Ramya Raghavendra, Udit Gupta, Bilge Acun, Newsha Ardalani,
+  Kiwan Maeng, Gloria Chang, Fiona Aga, Jinshi Huang, Charles Bai, et~al.
+\newblock Sustainable {AI}: Environmental implications, challenges and
+  opportunities.
+\newblock In \emph{Proceedings of Machine Learning and Systems}, volume~4,
+  pages 795--813, 2022.
+\newblock URL
+  \url{https://proceedings.mlsys.org/paper_files/paper/2022/hash/462211f67c7d858f663355eff93b745e-Abstract.html}.
+
+\bibitem[You(2025)]{you2025chatgpt}
+Josh You.
+\newblock How much energy does {ChatGPT} use?
+\newblock Gradient Updates, Epoch AI, February 2025.
+\newblock URL
+  \url{https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use}.
+\newblock Published 7 February 2025.
+
+\end{thebibliography}

@@ -1,0 +1,6 @@
+component,meaning,values
+incl_accelerator,Energy of the active AI accelerators (GPU/TPU) while serving the request.,yes / no / unknown
+incl_host,"Host CPU, DRAM and other server components of the active machine.",yes / approx / no / unknown
+incl_idle,Idle or reserve capacity provisioned for reliability and latency.,yes / partial / approx / no / unknown
+incl_overhead_pue,"Data-centre overhead (cooling, power conversion) via PUE.",yes / approx / no / unknown
+incl_embodied,Embodied impacts of hardware manufacturing (life-cycle).,yes / no / unknown

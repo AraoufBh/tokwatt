@@ -1,0 +1,32 @@
+macro_id,indicator,region,year,value,value_low,value_high,unit,kind,scenario,source_id,reported_in,locator,verification,notes
+TWM001,data_centre_electricity,World,2024,415,,,TWh,estimate,,IEA2025,,Executive summary,human_verified,~1.5% of world electricity consumption
+TWM002,data_centre_electricity_share,World,2024,1.5,,,% of electricity consumption,estimate,,IEA2025,,Executive summary,human_verified,
+TWM003,data_centre_electricity_growth,World,2017-2024,12,,,%/yr,estimate,,IEA2025,,Executive summary,human_verified,More than four times faster than total electricity consumption
+TWM004,data_centre_electricity,World,2030,945,,,TWh,projection,Base Case,IEA2025,,Executive summary,human_verified,
+TWM005,data_centre_electricity,World,2035,1200,700,1700,TWh,projection,Base Case (range across cases),IEA2025,,Executive summary,human_verified,
+TWM006,data_centre_electricity_share_by_region,United States,2024,45,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,
+TWM007,data_centre_electricity_share_by_region,China,2024,25,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,
+TWM008,data_centre_electricity_share_by_region,Europe,2024,15,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,
+TWM009,data_centre_electricity,World,2025,447,,,TWh,estimate,,GARTNER2026,,Press release,human_verified,
+TWM010,data_centre_electricity,World,2026,565,,,TWh,forecast,,GARTNER2026,,Press release,human_verified,+26% year over year
+TWM011,data_centre_electricity,World,2030,1200,,,TWh,forecast,,GARTNER2026,,Press release,human_verified,"Stated as 'over 1,200 TWh'; Gartner adds that grid supply will be insufficient"
+TWM012,data_centre_power_demand,World,2025,104,,,GW,estimate,,GARTNER2026,,Press release,human_verified,
+TWM013,data_centre_power_demand,World,2026,132,,,GW,forecast,,GARTNER2026,,Press release,human_verified,
+TWM014,data_centre_power_demand,World,2030,290,,,GW,forecast,,GARTNER2026,,Press release,human_verified,
+TWM015,ai_optimized_server_share_of_dc_consumption,World,2026,31,,,%,forecast,,GARTNER2026,,Press release,human_verified,
+TWM016,ai_optimized_server_electricity,World,2025,95,,,TWh,estimate,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM017,conventional_server_electricity,World,2025,193,,,TWh,estimate,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM018,ai_optimized_server_electricity,World,2026,175,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM019,conventional_server_electricity,World,2026,195,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM020,ai_optimized_server_electricity,World,2027,258,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM021,conventional_server_electricity,World,2027,200,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,
+TWM022,data_centre_electricity,United States,2014,58,,,TWh,estimate,,LBNL2024,,DOE announcement,human_verified,
+TWM023,data_centre_electricity,United States,2023,176,,,TWh,estimate,,LBNL2024,,DOE announcement,human_verified,4.4% of US electricity
+TWM024,data_centre_electricity,United States,2028,,325,580,TWh,projection,range of scenarios,LBNL2024,,DOE announcement,human_verified,
+TWM025,data_centre_electricity_share,United States,2023,4.4,,,% of electricity consumption,estimate,,LBNL2024,,DOE announcement,human_verified,
+TWM026,data_centre_electricity_share,United States,2028,,6.7,12,% of electricity consumption,projection,range of scenarios,LBNL2024,MITTR2025,Part Four,human_verified,
+TWM027,data_centre_electricity,United States,2024,200,,,TWh,estimate,,LBNL2024,MITTR2025,Part Four,human_verified,'somewhere around 200 TWh'
+TWM028,ai_server_electricity,United States,2024,,53,76,TWh,estimate,,LBNL2024,MITTR2025,Part Four,human_verified,
+TWM029,ai_server_electricity,United States,2028,,165,326,TWh,projection,,LBNL2024,MITTR2025,Part Four,human_verified,
+TWM030,chatgpt_messages_per_day,World,2024-12,1000000000,,,messages/day,company_statement,,MITTR2025,,Part Three,human_verified,OpenAI statement reported by MIT Technology Review
+TWM031,chatgpt_images_per_day,World,2025-03,78000000,,,images/day,company_statement,,MITTR2025,,Part Three,human_verified,After the March 2025 image-generator launch

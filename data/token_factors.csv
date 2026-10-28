@@ -1,0 +1,7 @@
+factor_id,source_id,model,token_type,wh_per_million_tokens,method,verification,notes
+TWT001,COUCH2026,GPT-4o (EPOCH2025 anchor),blended (10k in + ~530 out),240,derived,human_verified,2.5 Wh / 0.01053 MTok
+TWT002,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),input (fresh),390,derived,human_verified,
+TWT003,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),output,1950,derived,human_verified,
+TWT004,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),cache read,39,derived,human_verified,"Assumed 10% of fresh input, mirroring the price ratio; HAUSFATHER2026 tests 1-25%."
+TWT005,CLAUDECARBON2026,Claude 3.7 Sonnet (fit on JEGHAM2025),input (fresh),135,regression,human_verified,1.35e-4 Wh per input token
+TWT006,CLAUDECARBON2026,Claude 3.7 Sonnet (fit on JEGHAM2025),output,2880,regression,human_verified,2.88e-3 Wh per output token

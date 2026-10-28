@@ -1,0 +1,6 @@
+parameter,value,source_id,notes
+F_ACCELERATOR_TO_FULL,1.72,GOOGLE2025,Production scaling from active-accelerator energy to the comprehensive boundary (Sec. 4.1). Sensitivity: 2.0 (MITTR2025 doubling heuristic).
+PUE_REF,1.13,GOOGLE2025; JEGHAM2025,"Median of 1.09 (Google fleet, GOOGLE2025), 1.12 (Azure), 1.14 (AWS), 1.27 (DeepSeek, China) as used in JEGHAM2025 Table 1."
+WUE_ONSITE_L_PER_KWH,1.15,GOOGLE2025,"Google fleet WUE Category 2 (2023 and 2024), applied to IT energy (excluding overhead). Used for the app's indicative water figure."
+DEFAULT_PRICE_USD_PER_KWH,0.168,EIA2025,"US residential average, 2025 forecast. Editable default in the app only."
+REACTOR_GW,1.0,,Round reactor unit for the '1 billion people' multiplier: average GW = (Wh per person per day) / 24.

@@ -1,0 +1,20 @@
+{
+  "title": "TokWatt: AI Inference Energy Database",
+  "subtitle": "Boundary-annotated energy estimates for chat, agents, images and video",
+  "id": "KAGGLE_USERNAME/tokwatt-ai-inference-energy",
+  "licenses": [{ "name": "CC-BY-4.0" }],
+  "keywords": ["energy", "artificial intelligence", "climate", "data centers", "large language models"],
+  "description": "TokWatt collects first-hand estimates of the energy used by AI inference, records each with its measurement boundary and functional unit, and derives harmonized per-task reference values. See README.md, DATA_DICTIONARY.md and DATASHEET.md. Version 0.1.0.",
+  "resources": [
+    { "path": "estimates.csv", "description": "One row per published estimate with boundary flags and harmonized energy (Wh)" },
+    { "path": "sources.csv", "description": "Bibliographic records" },
+    { "path": "task_defaults.csv", "description": "Derived central/low/high Wh per task" },
+    { "path": "tasks.csv", "description": "Task taxonomy and reference-set rules" },
+    { "path": "token_factors.csv", "description": "Energy per million tokens" },
+    { "path": "macro.csv", "description": "Data-centre electricity and power indicators" },
+    { "path": "grid_carbon.csv", "description": "Life-cycle carbon intensity of electricity by country (OWID/Ember)" },
+    { "path": "equivalents.csv", "description": "Everyday reference energies" },
+    { "path": "parameters.csv", "description": "Harmonization and app parameters" },
+    { "path": "boundary_components.csv", "description": "Boundary vocabulary" }
+  ]
+}

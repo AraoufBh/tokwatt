@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>TokWatt</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a meter that takes your day's AI use, beside the receipt it prints; a hazard-yellow band scales it to a billion people; the evidence follows like the fine print on the back of a utility bill. */
+:root {
+  --bg: #E9ECE9;
+  --surface: #F6F7F5;
+  --paper: #FFFFFF;
+  --ink: #15191B;
+  --ink-2: #464E52;
+  --ink-3: #5F676B;
+  --rule: #C3C9C5;
+  --grid: #D3D8D4;
+  --accent: #B86A00;
+  --on-accent: #FFFFFF;
+  --accent-wash: rgba(184, 106, 0, 0.26);
+  --dot: #9CA09A;
+  --hazard: #F2C200;
+  --on-hazard: #141414;
+  --drum: #1A1E21;
+  --drum-2: #2B3135;
+  --on-drum: #F2F3F1;
+  --shadow: rgba(21, 25, 27, 0.16);
+  --font-display: "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --t-xs: 0.75rem;
+  --t-sm: 0.875rem;
+  --t-md: 1rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.75rem;
+  --t-hero: clamp(2.25rem, 5.4vw, 3.9rem);
+  --t-giant: clamp(4.25rem, 14vw, 9.5rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111416; --surface: #181C1F; --paper: #1E2326; --ink: #E9ECEA; --ink-2: #B9C0C2; --ink-3: #8D969A;
+    --rule: #343B3F; --grid: #262C2F; --accent: #C98500; --on-accent: #111416; --accent-wash: rgba(201, 133, 0, 0.30);
+    --dot: #6A6E69; --hazard: #D8AE00; --on-hazard: #141414; --drum: #08090A; --drum-2: #1D2225; --on-drum: #F2F3F1;
+    --shadow: rgba(0, 0, 0, 0.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111416; --surface: #181C1F; --paper: #1E2326; --ink: #E9ECEA; --ink-2: #B9C0C2; --ink-3: #8D969A;
+  --rule: #343B3F; --grid: #262C2F; --accent: #C98500; --on-accent: #111416; --accent-wash: rgba(201, 133, 0, 0.30);
+  --dot: #6A6E69; --hazard: #D8AE00; --on-hazard: #141414; --drum: #08090A; --drum-2: #1D2225; --on-drum: #F2F3F1;
+  --shadow: rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: var(--t-md); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 3px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+h2 { font-family: var(--font-display); font-stretch: 112%; font-weight: 800; font-size: var(--t-xl); line-height: 1.12; letter-spacing: -0.01em; }
+h3 { font-size: var(--t-md); font-weight: 700; line-height: 1.3; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { width: 100%; max-width: 1200px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.lede { font-size: 1.125rem; color: var(--ink-2); max-width: 62ch; }
+.hint { font-size: 0.8rem; color: var(--ink-3); line-height: 1.45; }
+
+/* header */
+.top { border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 24px; padding-block: 14px; }
+.mark { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: 1.375rem; letter-spacing: -0.01em; text-decoration: none; line-height: 1; }
+.mark span { color: var(--accent); }
+.top nav { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--t-sm); }
+.top nav a { color: var(--ink-2); text-decoration: none; }
+.top nav a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); }
+
+/* hero */
+.hero .wrap { padding-block: 44px 28px; display: grid; gap: 16px; }
+.hero h1 { font-family: var(--font-display); font-stretch: 125%; font-weight: 850; font-size: var(--t-hero); line-height: 1.02; letter-spacing: -0.02em; max-width: 16ch; }
+.context { font-size: var(--t-sm); color: var(--ink-3); max-width: 76ch; }
+
+/* calculator */
+.calc .wrap { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: 32px; align-items: start; padding-block: 8px 56px; }
+@media (max-width: 900px) { .calc .wrap { grid-template-columns: minmax(0, 1fr); } }
+.meter { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: grid; gap: 18px; min-width: 0; }
+.panel-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.panel-head h2 { font-size: var(--t-lg); }
+.tag { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--ink-3); border-radius: 3px; color: var(--ink-2); }
+.linkbtn { margin-left: auto; font: inherit; font-size: var(--t-sm); color: var(--ink-2); background: none; border: 0; padding: 4px 0; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; cursor: pointer; }
+.linkbtn:hover { color: var(--ink); }
+
+.counter { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.drums { display: inline-flex; align-items: stretch; gap: 3px; padding: 5px; background: var(--drum); border-radius: 5px; font-family: var(--font-mono); font-weight: 600; font-size: clamp(2.1rem, 6vw, 3.1rem); line-height: 1; }
+.drum { width: 0.82em; height: 1.24em; overflow: hidden; background: var(--drum-2); color: var(--on-drum); border-radius: 2px; }
+.drum .strip { display: flex; flex-direction: column; }
+.drums.ready .strip { transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.drum .strip span { height: 1.24em; display: grid; place-items: center; }
+.drum.dec { background: var(--accent); color: var(--on-accent); }
+.drum.lead .strip { opacity: 0.32; }
+.dp { color: var(--on-drum); width: 0.28em; display: grid; align-items: end; justify-items: center; padding-bottom: 0.08em; }
+.counter-read { display: grid; gap: 2px; min-width: 0; }
+.counter-unit { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--ink); font-weight: 500; }
+.counter-range { font-size: var(--t-sm); color: var(--ink-3); }
+
+.tasks { list-style: none; margin: 0; padding: 0; }
+.task { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 16px; padding-block: 12px; border-top: 1px solid var(--grid); }
+.task:last-child { border-bottom: 1px solid var(--grid); }
+.task-info { min-width: 0; }
+.task-name { font-weight: 650; }
+.task-hint { font-size: var(--t-sm); color: var(--ink-3); }
+.task-ev { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-2); }
+.single { font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); border: 1px solid var(--accent); border-radius: 3px; padding: 0 5px; }
+.stepper { display: inline-flex; align-items: stretch; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); }
+.stepper button { width: 40px; height: 40px; border: 0; background: transparent; color: var(--ink); font: 600 1.2rem/1 var(--font-mono); cursor: pointer; }
+.stepper button:hover { background: var(--grid); }
+.stepper input[type="number"] { width: 3.8ch; min-width: 3.8ch; border: 0; border-inline: 1px solid var(--rule); border-radius: 0; background: transparent; color: var(--ink); text-align: center; font: 600 1rem var(--font-mono); padding: 0; -moz-appearance: textfield; appearance: textfield; }
+.stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+@media (max-width: 560px) { .settings { grid-template-columns: minmax(0, 1fr); } }
+.field { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.field > label { font-size: var(--t-sm); font-weight: 650; }
+select, input[type="number"], input[type="search"], input[type="text"] { font: inherit; font-size: var(--t-sm); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 9px 10px; min-width: 0; width: 100%; }
+.price { display: flex; align-items: center; gap: 8px; }
+.price #cur { width: 5.5ch; flex: none; text-transform: uppercase; font-family: var(--font-mono); }
+.price #price { flex: 1; font-family: var(--font-mono); }
+.price span { font-size: var(--t-sm); color: var(--ink-3); white-space: nowrap; }
+
+.receipt-col { display: grid; justify-items: center; gap: 14px; min-width: 0; }
+.receipt-wrap { width: 100%; max-width: 420px; filter: drop-shadow(0 12px 16px var(--shadow)); }
+.paper {
+  --z: 14px;
+  background: var(--paper); color: var(--ink); font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.62; padding: 34px 24px 30px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--z) 51% repeat-x, conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--z) 51% repeat-x;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--z) 51% repeat-x, conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--z) 51% repeat-x;
+}
+.r-title { text-align: center; font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: 1.6rem; line-height: 1.1; letter-spacing: 0.01em; }
+.r-sub { text-align: center; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-2); margin-top: 2px; }
+.r-flag { text-align: center; margin-top: 10px; }
+.r-flag span { display: inline-block; border: 1.5px solid var(--ink); padding: 0 8px; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.r-meta { display: flex; justify-content: space-between; gap: 10px; margin-top: 12px; font-size: 0.72rem; color: var(--ink-3); }
+.r-meta span:first-child { text-transform: uppercase; }
+.r-rule { border-top: 1.5px dashed var(--ink-3); margin-block: 11px; }
+.r-item { display: grid; grid-template-columns: minmax(0, 1fr) auto 8.5ch; gap: 0 10px; align-items: baseline; }
+.r-item .l { text-transform: uppercase; overflow-wrap: anywhere; }
+.r-item .m { color: var(--ink-3); white-space: nowrap; text-align: right; }
+.r-item .r, .r-kv .r, .r-total .r, .r-big .r { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.r-item.zero { color: var(--ink-3); }
+.r-head { text-transform: uppercase; font-weight: 600; color: var(--ink-2); }
+.r-total, .r-kv, .r-big { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.r-total { font-weight: 600; font-size: 1.1rem; }
+.r-total .l, .r-big .l { text-transform: uppercase; }
+.r-kv .l { color: var(--ink-2); min-width: 0; }
+.r-kv.in .l { padding-left: 1.2ch; }
+.r-eq, .r-note { color: var(--ink-2); }
+.r-big { font-weight: 600; }
+@media (max-width: 480px) { .meter { padding: 16px; } .paper { padding-inline: 18px; } }
+.r-foot { text-align: center; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.r-code { display: block; width: 72%; height: 38px; margin: 10px auto 0; color: var(--ink); }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.btn { font: 650 var(--t-sm)/1 var(--font-body); padding: 11px 14px; border: 1.5px solid var(--ink); border-radius: 3px; background: transparent; color: var(--ink); cursor: pointer; }
+.btn:hover { background: var(--surface); }
+.btn.solid { background: var(--ink); color: var(--bg); }
+.btn.solid:hover { background: var(--ink-2); }
+.btn.sm { padding: 7px 10px; font-size: 0.8rem; }
+.status { min-height: 1.4em; font-size: var(--t-sm); color: var(--ink-2); text-align: center; }
+.fallback { width: 100%; max-width: 420px; min-height: 6em; font: 0.8rem/1.5 var(--font-mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 8px; }
+.receipt-note { max-width: 420px; }
+
+/* the billion band */
+.billion { background: var(--hazard); color: var(--on-hazard); }
+.billion::before { content: ""; display: block; height: 10px; background: repeating-linear-gradient(135deg, var(--on-hazard) 0 14px, var(--hazard) 14px 28px); }
+.billion .wrap { padding-block: 40px 52px; display: grid; gap: 20px; }
+.billion h2 { font-stretch: 125%; font-weight: 900; text-transform: uppercase; font-size: clamp(1.1rem, 2.6vw, 1.6rem); letter-spacing: 0.01em; }
+.bil-main { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 32px; }
+.bil-fig { display: flex; align-items: baseline; gap: 10px; }
+.bil-num { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; font-size: var(--t-giant); line-height: 0.86; letter-spacing: -0.03em; }
+.bil-unit { font-family: var(--font-display); font-stretch: 125%; font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.6rem); }
+.bil-text { display: grid; gap: 6px; max-width: 36ch; padding-bottom: 8px; }
+.bil-lead { font-size: var(--t-lg); font-weight: 750; line-height: 1.25; }
+.bil-sub { font-family: var(--font-mono); font-size: var(--t-sm); }
+.units { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.u { position: relative; width: 20px; height: 20px; border: 2px solid var(--on-hazard); border-radius: 2px; overflow: hidden; }
+.u.full { background: var(--on-hazard); }
+.u.part::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p, 50%); background: var(--on-hazard); }
+.more { font-family: var(--font-mono); font-size: var(--t-sm); margin-left: 6px; }
+.units-key, .bil-context { font-size: var(--t-sm); max-width: 74ch; }
+.bil-context { font-size: var(--t-md); font-weight: 550; }
+.billion a { text-decoration-color: currentColor; }
+
+/* sections */
+.sec .wrap { padding-block: 64px 8px; display: grid; gap: 16px; }
+.sec-lede { color: var(--ink-2); max-width: 70ch; }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; font-size: var(--t-sm); color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.k-range { width: 30px; height: 8px; border-radius: 4px; background: var(--accent-wash); }
+.k-ref { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.k-est { width: 8px; height: 8px; border-radius: 50%; background: var(--dot); }
+.k-you { width: 2px; height: 16px; background: var(--ink); }
+.chart { position: relative; min-width: 0; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: var(--font-mono); }
+.chart .ax { fill: var(--ink-3); font-size: 11px; }
+.chart .gl { stroke: var(--grid); stroke-width: 1; }
+.chart .lbl { fill: var(--ink); font-family: var(--font-body); font-size: 13.5px; }
+.chart .val { fill: var(--ink-2); font-size: 12px; }
+.chart .rng { fill: var(--accent-wash); }
+.chart .ref { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.chart .est { fill: var(--dot); stroke: var(--bg); stroke-width: 2; }
+.chart .you { stroke: var(--ink); stroke-width: 1.5; pointer-events: none; }
+.chart .you-lbl { fill: var(--ink); font-size: 12px; font-weight: 600; pointer-events: none; }
+.chart .row-hit { fill: transparent; }
+.chart .row { outline: none; }
+.chart .row:focus-visible .row-hit { stroke: var(--accent); stroke-width: 2; }
+.tip { position: absolute; z-index: 3; pointer-events: none; width: max-content; max-width: min(300px, 80vw); background: var(--paper); color: var(--ink); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 10px; font-size: 0.8rem; line-height: 1.4; box-shadow: 0 8px 18px var(--shadow); }
+.tip .v { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; }
+.tip .k { color: var(--ink-3); font-size: 0.75rem; }
+.caption { font-size: 0.8rem; color: var(--ink-3); }
+details.tv summary { cursor: pointer; font-size: var(--t-sm); font-weight: 650; padding-block: 4px; }
+details.tv .scroll { margin-top: 10px; }
+
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll.tall { max-height: 72vh; overflow: auto; border-block: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+th { position: sticky; top: 0; z-index: 1; background: var(--bg); text-align: left; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding: 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+td.n, th.n { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 16px; }
+.filters .field { width: auto; }
+.filters select { width: auto; max-width: 100%; }
+.filters input[type="search"] { width: 15rem; max-width: 100%; }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-sm); padding-bottom: 9px; }
+.check input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.count { margin-left: auto; padding-bottom: 10px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-3); }
+.bkey { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; font-size: 0.8rem; color: var(--ink-2); }
+.bkey span { display: inline-flex; align-items: center; gap: 6px; }
+.bp { display: inline-flex; gap: 3px; vertical-align: middle; }
+.bp i { display: inline-block; width: 13px; height: 13px; border: 1.5px solid var(--ink-2); border-radius: 2px; }
+.bp i.y { background: var(--ink-2); }
+.bp i.a { background: linear-gradient(135deg, var(--ink-2) 0 50%, transparent 50%); }
+.bp i.u { border-style: dotted; }
+table.ev td.sys { min-width: 13rem; }
+table.ev td.sys b { font-weight: 650; }
+table.ev td.sys span { display: block; font-size: 0.75rem; color: var(--ink-3); }
+tr.ev-row { cursor: pointer; }
+tr.ev-row:hover td { background: var(--surface); }
+.exp { width: 28px; height: 28px; border: 0; background: transparent; color: var(--ink-2); font: 600 1.05rem/1 var(--font-mono); cursor: pointer; transition: transform 150ms; }
+.exp[aria-expanded="true"] { transform: rotate(90deg); }
+tr.ev-detail td { background: var(--surface); }
+.det { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; margin: 0; font-size: 0.8rem; max-width: 920px; }
+.det dt { color: var(--ink-3); }
+.det dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .det { grid-template-columns: minmax(0, 1fr); } .det dd { margin-bottom: 6px; } }
+.refpill { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: var(--on-accent); padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+
+.method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 44px; }
+@media (max-width: 760px) { .method-grid { grid-template-columns: minmax(0, 1fr); } }
+.method-grid article { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.method-grid h3 { font-family: var(--font-display); font-stretch: 112%; font-weight: 800; font-size: 1.1rem; }
+.method-grid p { color: var(--ink-2); max-width: 62ch; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px; overflow-x: auto; white-space: nowrap; }
+
+.data-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 44px; }
+@media (max-width: 860px) { .data-grid { grid-template-columns: minmax(0, 1fr); } }
+.data-grid > div { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.files { list-style: none; margin: 0; padding: 0; }
+.files li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 9px; border-top: 1px solid var(--grid); }
+.files li:last-child { border-bottom: 1px solid var(--grid); }
+.files .fn { font-family: var(--font-mono); font-size: var(--t-sm); }
+.files .fd { font-size: 0.78rem; color: var(--ink-3); }
+pre.cite { margin: 0; font: 0.78rem/1.55 var(--font-mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.srcs .wrap { padding-block: 64px 72px; display: grid; gap: 16px; }
+.src-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 36px; font-size: 0.82rem; }
+@media (max-width: 760px) { .src-list { grid-template-columns: minmax(0, 1fr); } }
+.src-list li { min-width: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.src-list b { color: var(--ink); font-weight: 650; }
+.fine { font-size: 0.78rem; color: var(--ink-3); border-top: 1px solid var(--rule); padding-top: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .drums.ready .strip, .exp { transition: none; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" id="top">Tok<span>Watt</span></a>
+    <nav aria-label="Sections">
+      <a href="#ladder">Energy ladder</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#method">Method</a>
+      <a href="#data">Data and citation</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Open dataset · <span data-bind="version">v0.1.0</span> · <span data-bind="nest">134</span> estimates · <span data-bind="nsrc">13</span> sources</p>
+      <h1>What does your AI day draw from the grid?</h1>
+      <p class="lede">Electricity has become the limit on how much AI the world can run. Count what you asked AI to do today, and TokWatt turns it into watt-hours from published measurements and models, with the uncertainty left in.</p>
+      <p class="context" id="context"></p>
+    </div>
+  </section>
+
+  <section class="calc" aria-labelledby="day-h">
+    <div class="wrap">
+      <div class="meter">
+        <div class="panel-head">
+          <h2 id="day-h">Your day</h2>
+          <span class="tag" id="example-tag">Example values</span>
+          <button class="linkbtn" type="button" id="reset">Reset to example</button>
+        </div>
+        <div class="counter">
+          <div class="drums" id="drums" aria-hidden="true"></div>
+          <div class="counter-read">
+            <div class="counter-unit"><span id="counter-unit">Wh</span> per day</div>
+            <div class="counter-range" id="counter-range"></div>
+          </div>
+        </div>
+        <div class="sr" id="sr-total" aria-live="polite"></div>
+        <ul class="tasks" id="tasks"></ul>
+        <div class="settings">
+          <div class="field">
+            <label for="grid">Electricity grid</label>
+            <select id="grid"></select>
+            <p class="hint" id="grid-hint"></p>
+          </div>
+          <div class="field">
+            <label for="price">Electricity price</label>
+            <div class="price">
+              <input id="cur" type="text" maxlength="4" autocomplete="off" spellcheck="false" aria-label="Currency code">
+              <input id="price" type="number" min="0" step="0.001" inputmode="decimal">
+              <span>per kWh</span>
+            </div>
+            <p class="hint">Default: average US household price for 2025 (EIA). Type your own tariff and currency.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="receipt-col">
+        <div class="receipt-wrap"><div class="paper" id="receipt" aria-label="Energy receipt"></div></div>
+        <div class="actions">
+          <button class="btn solid" type="button" id="save-png" data-save hidden>Save receipt as image</button>
+          <button class="btn" type="button" id="copy-sum">Copy summary</button>
+        </div>
+        <p class="status" id="receipt-status" role="status"></p>
+        <textarea class="fallback" id="copy-fallback" readonly hidden aria-label="Summary text"></textarea>
+        <p class="hint receipt-note">Each line uses TokWatt's reference value for that task. The range adds up the lowest and highest published intervals. CO₂e uses the life-cycle intensity of the grid you choose. Water is on-site cooling at <span data-bind="wue">1.15</span> L per kWh of server energy (Google fleet average).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="billion" aria-labelledby="bil-h">
+    <div class="wrap">
+      <h2 id="bil-h">If a billion people used AI like you</h2>
+      <div class="bil-main">
+        <div class="bil-fig"><span class="bil-num" id="bil-num">0</span><span class="bil-unit" id="bil-unit">GW</span></div>
+        <div class="bil-text">
+          <p class="bil-lead" id="bil-lead"></p>
+          <p class="bil-sub" id="bil-range"></p>
+        </div>
+      </div>
+      <div class="units" id="units" aria-hidden="true"></div>
+      <p class="units-key">Each square is one large nuclear reactor of about 1 GW, running day and night. Filled squares show the reference value; outlined squares run to the top of the published range.</p>
+      <p class="bil-context" id="bil-context"></p>
+    </div>
+  </section>
+
+  <section class="sec" id="ladder" aria-labelledby="lad-h">
+    <div class="wrap">
+      <h2 id="lad-h">The energy ladder</h2>
+      <p class="sec-lede" id="lad-lede"></p>
+      <div class="legend">
+        <span><i class="k-range"></i>Published range</span>
+        <span><i class="k-ref"></i>TokWatt reference value</span>
+        <span><i class="k-est"></i>One published estimate</span>
+        <span><i class="k-you"></i>Your whole day</span>
+      </div>
+      <div class="chart" id="chart"><div class="tip" id="tip" hidden></div></div>
+      <p class="caption">Watt-hours per task on a logarithmic scale: each gridline is ten times the one before. Estimates are shown after boundary harmonization. Hover or focus a row for details.</p>
+      <details class="tv">
+        <summary>Reference values as a table</summary>
+        <div class="scroll">
+          <table id="ref-table">
+            <thead><tr><th scope="col">Task</th><th scope="col" class="n">Reference (Wh)</th><th scope="col" class="n">Range (Wh)</th><th scope="col" class="n">Estimates</th><th scope="col" class="n">Sources</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="sec" id="evidence" aria-labelledby="ev-h">
+    <div class="wrap">
+      <h2 id="ev-h">The evidence</h2>
+      <p class="sec-lede">Every estimate keeps the boundary its authors used, so you can see why two numbers for the same task disagree. Open a row for the functional unit, the exact place in the source and the notes.</p>
+      <div class="filters">
+        <div class="field"><label for="f-task">Task</label><select id="f-task"></select></div>
+        <div class="field"><label for="f-q">Search</label><input id="f-q" type="search" placeholder="Model, provider or source"></div>
+        <label class="check"><input type="checkbox" id="f-ref"> Reference set only</label>
+        <span class="count" id="f-count"></span>
+      </div>
+      <div class="bkey" aria-label="Boundary key">
+        <span>Boundary, in order: accelerators · host server · idle capacity · facility overhead (PUE) · hardware manufacturing</span>
+        <span><span class="bp"><i class="y"></i></span>counted</span>
+        <span><span class="bp"><i class="a"></i></span>approximated or partly counted</span>
+        <span><span class="bp"><i class="n"></i></span>not counted</span>
+        <span><span class="bp"><i class="u"></i></span>not stated</span>
+      </div>
+      <div class="scroll tall">
+        <table class="ev" id="ev-table">
+          <thead><tr><th scope="col"><span class="sr">Details</span></th><th scope="col">Model or system</th><th scope="col">Task</th><th scope="col">Source</th><th scope="col">Method</th><th scope="col">Boundary</th><th scope="col" class="n">Wh</th><th scope="col"><span class="sr">Reference set</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="method" aria-labelledby="me-h">
+    <div class="wrap">
+      <h2 id="me-h">How the numbers are made</h2>
+      <div class="method-grid">
+        <article>
+          <h3>Same boundary before comparing</h3>
+          <p>Published figures count different things. Some measure only the AI chips. Others add the host server, idle reserve machines, cooling and power conversion, or the manufacturing of the hardware. TokWatt records all five for every estimate, then scales each value to one boundary, the server plus facility overhead.</p>
+          <p class="formula">chip-only × <span data-bind="facc">1.72</span> · server-only × PUE <span data-bind="pue">1.13</span> · already complete × 1</p>
+          <p>The 1.72 factor is Google's measured ratio between chip energy and its full serving energy. The PUE is the median of the hyperscaler values used in the literature. Values whose boundary is not disclosed are left as published and flagged.</p>
+        </article>
+        <article>
+          <h3>Reference values</h3>
+          <p>Each task has a reference set: the estimates that match its definition, such as the default models of the major assistants for a chat answer. The reference value is the median of that set. The range runs from the lowest to the highest interval the sources report. Tasks resting on a single source are marked.</p>
+        </article>
+        <article>
+          <h3>The billion rule</h3>
+          <p>One billion people using E watt-hours a day draw E ÷ 24 gigawatts on average, around the clock. Every 24 Wh per person per day is roughly one large nuclear reactor.</p>
+          <p class="formula">1e9 people × E Wh/day ÷ 24 h = E/24 GW</p>
+        </article>
+        <article>
+          <h3>Limits</h3>
+          <p>Few developers publish per-query energy, so many rows are models of production systems rather than measurements of them. Agent estimates come from token logs, and the energy of re-reading cached context is the largest unknown. Training, user devices and networks are outside the boundary.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="data" aria-labelledby="da-h">
+    <div class="wrap">
+      <h2 id="da-h">Data and citation</h2>
+      <div class="data-grid">
+        <div>
+          <h3>Download the tables</h3>
+          <ul class="files" id="files"></ul>
+          <p class="hint" id="dl-note">UTF-8 CSV. Data under CC BY 4.0.</p>
+          <p class="status" id="dl-status" role="status"></p>
+        </div>
+        <div>
+          <h3>Cite TokWatt</h3>
+          <pre class="cite" id="cite-text"></pre>
+          <div class="actions" style="justify-content:flex-start"><button class="btn sm" type="button" data-copy="cite-text">Copy citation</button></div>
+          <pre class="cite" id="bibtex"></pre>
+          <div class="actions" style="justify-content:flex-start"><button class="btn sm" type="button" data-copy="bibtex">Copy BibTeX</button></div>
+          <p class="status" id="cite-status" role="status"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="srcs" aria-labelledby="src-h">
+  <div class="wrap">
+    <h2 id="src-h">Sources</h2>
+    <ul class="src-list" id="src-list"></ul>
+    <p class="fine">TokWatt <span data-bind="version">v0.1.0</span> · data CC BY 4.0 · code MIT · grid carbon intensity from Our World in Data, based on Ember (CC BY 4.0).</p>
+  </div>
+</footer>
+
+<script type="application/json" id="tokwatt-data">{"version":"0.1.0","built":"2026-10-28","files":{"estimates.csv":"estimate_id,source_id,reported_in,task,prompt_size,functional_unit,model,provider,host,model_access,hardware,tokens_in,tokens_out,output_spec,energy_wh,energy_wh_low,energy_wh_high,energy_wh_sd,interval_type,reported_value,reported_unit,incl_accelerator,incl_host,incl_idle,incl_overhead_pue,incl_embodied,method,harmonization_factor,energy_wh_harmonized,co2e_g,co2e_basis,water_ml,water_scope,data_period,in_reference_set,locator,verification,notes\nTWE0001,GOOGLE2025,,chat_short,,Median Gemini Apps text prompt (Comprehensive Approach),Gemini Apps (models serving the median prompt),Google,Google,proprietary,Google TPU fleet (production),,,,0.24,,,,none,0.24,Wh/prompt,yes,yes,yes,yes,no,measured,1,0.24,0.03,market-based Scope 2 + Scope 1&3 embodied,0.26,on-site consumptive (WUE 1.15 L/kWh x IT energy),2025-05,TRUE,Table 1; Table 2; Sec. 4.1,human_verified,\"Components: active accelerators 0.14, host CPU&DRAM 0.06, idle machines 0.02, overhead (PUE) 0.02 Wh. Paper reports a 33x energy reduction per median prompt May 2024 -> May 2025.\"\nTWE0002,GOOGLE2025,,chat_short,,\"Median Gemini Apps text prompt (Existing Approach: active accelerators only, top-10% most efficient data centres)\",Gemini Apps (models serving the median prompt),Google,Google,proprietary,Google TPU fleet (production),,,,0.1,,,,none,0.10,Wh/prompt,yes,no,no,no,no,measured,1.72,0.172,0.02,market-based Scope 2 + Scope 1&3 embodied,0.12,on-site consumptive,2025-05,FALSE,Table 1; Table 2,human_verified,Boundary comparison point (comprehensive / existing = 2.4x). Table 2 gives 0.02 gCO2e and 0.12 mL; the text of Sec. 4.2 gives 0.01 gCO2e and 0.15 mL.\nTWE0003,ALTMAN2025,,chat_short,,Average ChatGPT query,ChatGPT (default model at the time),OpenAI,unspecified,proprietary,,,,,0.34,,,,none,0.34,Wh/query,unknown,unknown,unknown,unknown,unknown,disclosed,1,0.34,,,0.32,unspecified (0.000085 US gal),2025-06,TRUE,\"Blog post, parenthetical paragraph\",human_verified,No methodology or boundary disclosed.\nTWE0004,EPOCH2025,,chat_short,,Typical GPT-4o text query,GPT-4o (assumed ~100B active parameters),OpenAI,assumed,proprietary,NVIDIA H100 (assumed),,500,,0.3,,,,none,1050 J (~0.3 Wh),J/query,yes,approx,no,approx,no,modeled,1,0.3,,,,,2025-02,TRUE,Main text; Appendix sec. 2,human_verified,\"1500 W per H100 includes server and 10-20% data-centre overhead. Author notes alternative assumptions give ~0.1 Wh or 1-4 Wh (sensitivity, not recorded as an interval).\"\nTWE0005,EPOCH2025,,long_document,,GPT-4o query with a 10k-token input,GPT-4o (assumed),OpenAI,assumed,proprietary,NVIDIA H100 (assumed),10000,500,,2.5,,,,none,~2.5 (appendix: ~2.4),Wh/query,yes,approx,no,approx,no,modeled,1,2.5,,,,,2025-02,TRUE,Main text; Appendix sec. 3,human_verified,Input-processing cost is up-front; follow-up turns over the same document do not repeat it.\nTWE0006,EPOCH2025,,very_long_input,,GPT-4o query with a 100k-token input,GPT-4o (assumed),OpenAI,assumed,proprietary,NVIDIA H100 (assumed),100000,500,,40,,,,none,almost 40,Wh/query,yes,approx,no,approx,no,modeled,1,40,,,,,2025-02,TRUE,Main text; Appendix sec. 3,human_verified,Quadratic attention scaling assumed; author notes better algorithms may reduce this.\nTWE0007,OVIEDO2026,,chat_short,,\"Typical chatbot query, frontier-scale models (>200B parameters)\",Frontier-scale open models (modeled),multiple,modeled 8xH100 node,open-weights,\"8xNVIDIA H100, FP8\",,,,0.31,0.16,0.6,,IQR,0.31 (IQR 0.16-0.60),Wh/query,yes,yes,unknown,yes,no,modeled,1,0.31,,,,,2025-2026,TRUE,Abstract; Highlights,human_verified,Abstract values recorded. A third-party review (pith.science) reports the paper body gives 0.34 Wh (IQR 0.16-0.67); check the published version. Paper estimates 8-20x further line-of-sight reductions.\nTWE0008,OVIEDO2026,,chat_reasoning,test-time scaling,\"Test-time-scaling (reasoning) query, ~15x longer than typical\",Frontier-scale open models (modeled),multiple,modeled 8xH100 node,open-weights,\"8xNVIDIA H100, FP8\",,,,3.91,2.15,7.05,,IQR,3.91 (IQR 2.15-7.05),Wh/query,yes,yes,unknown,yes,no,modeled,1,3.91,,,,,2025-2026,TRUE,Abstract,human_verified,Abstract value recorded. A third-party review (pith.science) reports the paper body gives 4.32 Wh; check the published version.\nTWE0009,MLENERGY2025,OVIEDO2026,chat_short,,\"Llama 3.1 405B response (ML.ENERGY Benchmark v3.0, FP8, median)\",Llama 3.1 405B,Meta,ML.ENERGY testbed,open-weights,NVIDIA H100,,367,,0.21,,,,none,0.21,Wh/query (median),yes,no,no,no,no,measured,1.72,0.3612,,,,,2025,FALSE,Table 'Estimated energy per query for various models',human_verified,Originally MLENERGY2025; average 367 output tokens; GPU energy only.\nTWE0010,MLENERGY2025,OVIEDO2026,chat_short,,\"Mixtral 8x22B response (ML.ENERGY Benchmark v2.0, BF16, median)\",Mixtral 8x22B,Mistral AI,ML.ENERGY testbed,open-weights,NVIDIA H100,,389,,0.18,,,,none,0.18,Wh/query (median),yes,no,no,no,no,measured,1.72,0.3096,,,,,2025,FALSE,Table 'Estimated energy per query for various models',human_verified,Originally MLENERGY2025; OVIEDO2026 adjusts to FP8 as 0.11 Wh. GPU energy only.\nTWE0011,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4.1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.871,,,0.302,SD,0.871 +/- 0.302,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.871,,,,,2025,FALSE,Table 4,human_verified,\nTWE0012,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4.1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,3.161,,,0.515,SD,3.161 +/- 0.515,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.161,,,,,2025,FALSE,Table 4,human_verified,SD printed as '0515' in v5 Table 4; read as 0.515.\nTWE0013,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4.1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,4.833,,,0.65,SD,4.833 +/- 0.65,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.833,,,,,2025,FALSE,Table 4,human_verified,\nTWE0014,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4.1 mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.45,,,0.081,SD,0.45 +/- 0.081,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.45,,,,,2025,FALSE,Table 4,human_verified,\nTWE0015,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4.1 mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,1.545,,,0.211,SD,1.545 +/- 0.211,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.545,,,,,2025,FALSE,Table 4,human_verified,\nTWE0016,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4.1 mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,2.122,,,0.348,SD,2.122 +/- 0.348,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.122,,,,,2025,FALSE,Table 4,human_verified,\nTWE0017,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4.1 nano,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.207,,,0.047,SD,0.207 +/- 0.047,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.207,,,,,2025,FALSE,Table 4,human_verified,\nTWE0018,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4.1 nano,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,0.575,,,0.108,SD,0.575 +/- 0.108,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.575,,,,,2025,FALSE,Table 4,human_verified,\nTWE0019,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4.1 nano,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,0.827,,,0.094,SD,0.827 +/- 0.094,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.827,,,,,2025,FALSE,Table 4,human_verified,\nTWE0020,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o4-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,3.649,,,1.468,SD,3.649 +/- 1.468,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.649,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0021,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o4-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,7.38,,,2.177,SD,7.38 +/- 2.177,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,7.38,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0022,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o4-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,7.237,,,1.674,SD,7.237 +/- 1.674,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,7.237,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0023,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o3,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,1.177,,,0.224,SD,1.177 +/- 0.224,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.177,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0024,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o3,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,5.153,,,2.107,SD,5.153 +/- 2.107,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,5.153,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0025,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o3,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,12.222,,,1.082,SD,12.222 +/- 1.082,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,12.222,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0026,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o3-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,3.012,,,0.991,SD,3.012 +/- 0.991,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.012,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0027,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o3-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,6.865,,,1.33,SD,6.865 +/- 1.33,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,6.865,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0028,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o3-mini (high),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,5.389,,,1.183,SD,5.389 +/- 1.183,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,5.389,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0029,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o3-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.674,,,0.015,SD,0.674 +/- 0.015,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.674,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0030,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o3-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,2.423,,,0.237,SD,2.423 +/- 0.237,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.423,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0031,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o3-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,3.525,,,0.168,SD,3.525 +/- 0.168,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.525,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0032,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,2.268,,,0.654,SD,2.268 +/- 0.654,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.268,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0033,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,4.047,,,0.497,SD,4.047 +/- 0.497,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.047,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0034,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o1,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,6.181,,,0.877,SD,6.181 +/- 0.877,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,6.181,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0035,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),o1-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.535,,,0.182,SD,0.535 +/- 0.182,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.535,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0036,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),o1-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,1.547,,,0.405,SD,1.547 +/- 0.405,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.547,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0037,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),o1-mini,OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,2.317,,,0.53,SD,2.317 +/- 0.53,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.317,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0038,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4o (Mar '25),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),100,300,,0.423,,,0.085,SD,0.423 +/- 0.085,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.423,,,,,2025,TRUE,Table 4,human_verified,Sec. 5.3/6.1 text gives 0.42 Wh (+/-0.13); Table 4 value recorded.\nTWE0039,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4o (Mar '25),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),1000,1000,,1.215,,,0.241,SD,1.215 +/- 0.241,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.215,,,,,2025,TRUE,Table 4,human_verified,\nTWE0040,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4o (Mar '25),OpenAI,Microsoft Azure,proprietary,DGX H200/H100 (inferred),10000,1500,,2.875,,,0.421,SD,2.875 +/- 0.421,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.875,,,,,2025,TRUE,Table 4,human_verified,\nTWE0041,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4o mini,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),100,300,,0.577,,,0.139,SD,0.577 +/- 0.139,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.577,,,,,2025,FALSE,Table 4,human_verified,\nTWE0042,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4o mini,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),1000,1000,,1.897,,,0.57,SD,1.897 +/- 0.57,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.897,,,,,2025,FALSE,Table 4,human_verified,\nTWE0043,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4o mini,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),10000,1500,,3.098,,,0.639,SD,3.098 +/- 0.639,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.098,,,,,2025,FALSE,Table 4,human_verified,\nTWE0044,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4 Turbo,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),100,300,,1.699,,,0.355,SD,1.699 +/- 0.355,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.699,,,,,2025,FALSE,Table 4,human_verified,\nTWE0045,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4 Turbo,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),1000,1000,,5.94,,,1.441,SD,5.94 +/- 1.441,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,5.94,,,,,2025,FALSE,Table 4,human_verified,\nTWE0046,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),GPT-4 Turbo,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),10000,1500,,9.877,,,1.304,SD,9.877 +/- 1.304,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,9.877,,,,,2025,FALSE,Table 4,human_verified,\nTWE0047,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),GPT-4,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),100,300,,1.797,,,0.259,SD,1.797 +/- 0.259,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.797,,,,,2025,FALSE,Table 4,human_verified,\nTWE0048,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),GPT-4,OpenAI,Microsoft Azure,proprietary,DGX A100 (inferred),1000,1000,,6.925,,,1.553,SD,6.925 +/- 1.553,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,6.925,,,,,2025,FALSE,Table 4,human_verified,\nTWE0049,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),DeepSeek-R1,DeepSeek,DeepSeek,open-weights,DGX H800,100,300,,19.251,,,9.449,SD,19.251 +/- 9.449,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,19.251,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0050,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),DeepSeek-R1,DeepSeek,DeepSeek,open-weights,DGX H800,1000,1000,,24.596,,,9.4,SD,24.596 +/- 9.4,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,24.596,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0051,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),DeepSeek-R1,DeepSeek,DeepSeek,open-weights,DGX H800,10000,1500,,29.078,,,9.725,SD,29.078 +/- 9.725,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,29.078,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0052,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),DeepSeek-V3,DeepSeek,DeepSeek,open-weights,DGX H800,100,300,,2.777,,,0.223,SD,2.777 +/- 0.223,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.777,,,,,2025,FALSE,Table 4,human_verified,\nTWE0053,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),DeepSeek-V3,DeepSeek,DeepSeek,open-weights,DGX H800,1000,1000,,8.864,,,0.724,SD,8.864 +/- 0.724,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,8.864,,,,,2025,FALSE,Table 4,human_verified,\nTWE0054,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),DeepSeek-V3,DeepSeek,DeepSeek,open-weights,DGX H800,10000,1500,,13.162,,,1.126,SD,13.162 +/- 1.126,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,13.162,,,,,2025,FALSE,Table 4,human_verified,\nTWE0055,JEGHAM2025,,chat_reasoning,short,Short prompt (100 in / 300 out tokens),DeepSeek-R1,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,100,300,,2.353,,,1.129,SD,2.353 +/- 1.129,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.353,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0056,JEGHAM2025,,chat_reasoning,medium,Medium prompt (1000 in / 1000 out tokens),DeepSeek-R1,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,1000,1000,,4.331,,,1.695,SD,4.331 +/- 1.695,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.331,,,,,2025,TRUE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0057,JEGHAM2025,,chat_reasoning,long,Long prompt (10000 in / 1500 out tokens),DeepSeek-R1,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,10000,1500,,7.41,,,2.159,SD,7.41 +/- 2.159,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,7.41,,,,,2025,FALSE,Table 4,human_verified,Reasoning model; energy includes hidden reasoning time.\nTWE0058,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),DeepSeek-V3,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,100,300,,0.742,,,0.125,SD,0.742 +/- 0.125,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.742,,,,,2025,FALSE,Table 4,human_verified,\nTWE0059,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),DeepSeek-V3,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,1000,1000,,2.165,,,0.578,SD,2.165 +/- 0.578,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.165,,,,,2025,FALSE,Table 4,human_verified,\nTWE0060,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),DeepSeek-V3,DeepSeek,Microsoft Azure,open-weights,DGX H200/H100,10000,1500,,3.696,,,0.221,SD,3.696 +/- 0.221,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.696,,,,,2025,FALSE,Table 4,human_verified,\nTWE0061,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),Claude-3.7 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),100,300,,0.95,,,0.04,SD,0.95 +/- 0.04,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.95,,,,,2025,TRUE,Table 4,human_verified,\nTWE0062,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),Claude-3.7 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),1000,1000,,2.989,,,0.201,SD,2.989 +/- 0.201,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.989,,,,,2025,TRUE,Table 4,human_verified,\nTWE0063,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),Claude-3.7 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),10000,1500,,5.671,,,0.302,SD,5.671 +/- 0.302,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,5.671,,,,,2025,TRUE,Table 4,human_verified,\nTWE0064,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),Claude-3.5 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),100,300,,0.973,,,0.066,SD,0.973 +/- 0.066,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.973,,,,,2025,FALSE,Table 4,human_verified,\nTWE0065,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),Claude-3.5 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),1000,1000,,3.638,,,0.256,SD,3.638 +/- 0.256,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,3.638,,,,,2025,FALSE,Table 4,human_verified,\nTWE0066,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),Claude-3.5 Sonnet,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),10000,1500,,7.772,,,0.345,SD,7.772 +/- 0.345,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,7.772,,,,,2025,FALSE,Table 4,human_verified,\nTWE0067,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),Claude-3.5 Haiku,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),100,300,,0.975,,,0.063,SD,0.975 +/- 0.063,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.975,,,,,2025,FALSE,Table 4,human_verified,\nTWE0068,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),Claude-3.5 Haiku,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),1000,1000,,4.464,,,0.283,SD,4.464 +/- 0.283,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.464,,,,,2025,FALSE,Table 4,human_verified,\nTWE0069,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),Claude-3.5 Haiku,Anthropic,AWS,proprietary,DGX H200/H100 (inferred),10000,1500,,8.01,,,0.338,SD,8.01 +/- 0.338,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,8.01,,,,,2025,FALSE,Table 4,human_verified,\nTWE0070,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3-8B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.108,,,0.002,SD,0.108 +/- 0.002,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.108,,,,,2025,FALSE,Table 4,human_verified,\nTWE0071,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3-8B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.37,,,0.005,SD,0.37 +/- 0.005,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.37,,,,,2025,FALSE,Table 4,human_verified,\nTWE0072,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3-70B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.861,,,0.022,SD,0.861 +/- 0.022,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.861,,,,,2025,FALSE,Table 4,human_verified,\nTWE0073,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3-70B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,2.871,,,0.094,SD,2.871 +/- 0.094,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.871,,,,,2025,FALSE,Table 4,human_verified,\nTWE0074,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.1-8B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.052,,,0.008,SD,0.052 +/- 0.008,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.052,,,,,2025,FALSE,Table 4,human_verified,\nTWE0075,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.1-8B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.172,,,0.015,SD,0.172 +/- 0.015,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.172,,,,,2025,FALSE,Table 4,human_verified,\nTWE0076,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.1-8B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,0.443,,,0.028,SD,0.443 +/- 0.028,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.443,,,,,2025,FALSE,Table 4,human_verified,\nTWE0077,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.1-70B,Meta,AWS,open-weights,DGX H200/H100,100,300,,1.271,,,0.02,SD,1.271 +/- 0.02,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.271,,,,,2025,FALSE,Table 4,human_verified,\nTWE0078,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.1-70B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,4.525,,,0.053,SD,4.525 +/- 0.053,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.525,,,,,2025,FALSE,Table 4,human_verified,\nTWE0079,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.1-70B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,19.183,,,0.56,SD,19.183 +/- 0.56,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,19.183,,,,,2025,FALSE,Table 4,human_verified,\nTWE0080,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.1-405B,Meta,AWS,open-weights,DGX H200/H100,100,300,,2.226,,,0.142,SD,2.226 +/- 0.142,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,2.226,,,,,2025,FALSE,Table 4,human_verified,\nTWE0081,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.1-405B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,9.042,,,0.385,SD,9.042 +/- 0.385,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,9.042,,,,,2025,FALSE,Table 4,human_verified,\nTWE0082,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.1-405B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,25.202,,,0.526,SD,25.202 +/- 0.526,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,25.202,,,,,2025,FALSE,Table 4,human_verified,\nTWE0083,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.2 1B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.109,,,0.013,SD,0.109 +/- 0.013,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.109,,,,,2025,FALSE,Table 4,human_verified,\nTWE0084,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.2 1B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.342,,,0.025,SD,0.342 +/- 0.025,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.342,,,,,2025,FALSE,Table 4,human_verified,\nTWE0085,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.2 1B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,0.552,,,0.059,SD,0.552 +/- 0.059,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.552,,,,,2025,FALSE,Table 4,human_verified,\nTWE0086,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.2 3B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.143,,,0.006,SD,0.143 +/- 0.006,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.143,,,,,2025,FALSE,Table 4,human_verified,\nTWE0087,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.2 3B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.479,,,0.017,SD,0.479 +/- 0.017,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.479,,,,,2025,FALSE,Table 4,human_verified,\nTWE0088,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.2 3B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,0.707,,,0.02,SD,0.707 +/- 0.02,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.707,,,,,2025,FALSE,Table 4,human_verified,\nTWE0089,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.2-vision 11B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.078,,,0.021,SD,0.078 +/- 0.021,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.078,,,,,2025,FALSE,Table 4,human_verified,\nTWE0090,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.2-vision 11B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.242,,,0.071,SD,0.242 +/- 0.071,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.242,,,,,2025,FALSE,Table 4,human_verified,\nTWE0091,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.2-vision 11B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,1.087,,,0.06,SD,1.087 +/- 0.06,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.087,,,,,2025,FALSE,Table 4,human_verified,\nTWE0092,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.2-vision 90B,Meta,AWS,open-weights,DGX H200/H100,100,300,,1.235,,,0.054,SD,1.235 +/- 0.054,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.235,,,,,2025,FALSE,Table 4,human_verified,\nTWE0093,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.2-vision 90B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,4.534,,,0.448,SD,4.534 +/- 0.448,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,4.534,,,,,2025,FALSE,Table 4,human_verified,\nTWE0094,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.2-vision 90B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,6.852,,,0.78,SD,6.852 +/- 0.78,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,6.852,,,,,2025,FALSE,Table 4,human_verified,\nTWE0095,JEGHAM2025,,chat_short,short,Short prompt (100 in / 300 out tokens),LLaMA-3.3 70B,Meta,AWS,open-weights,DGX H200/H100,100,300,,0.237,,,0.023,SD,0.237 +/- 0.023,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.237,,,,,2025,FALSE,Table 4,human_verified,\nTWE0096,JEGHAM2025,,chat_medium,medium,Medium prompt (1000 in / 1000 out tokens),LLaMA-3.3 70B,Meta,AWS,open-weights,DGX H200/H100,1000,1000,,0.76,,,0.079,SD,0.76 +/- 0.079,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,0.76,,,,,2025,FALSE,Table 4,human_verified,\nTWE0097,JEGHAM2025,,long_document,long,Long prompt (10000 in / 1500 out tokens),LLaMA-3.3 70B,Meta,AWS,open-weights,DGX H200/H100,10000,1500,,1.447,,,0.188,SD,1.447 +/- 0.188,Wh/query (mean +/- SD),yes,yes,no,yes,no,modeled,1,1.447,,,,,2025,FALSE,Table 4,human_verified,\nTWE0098,JEGHAM2025,,chat_short,short,\"Short prompt (100 in / 300 out tokens), minimal reasoning\",GPT-5 (minimal reasoning),OpenAI,Microsoft Azure (assumed),proprietary,not specified,100,300,,0.67,,,,none,0.67,Wh/query (average),yes,yes,no,yes,no,modeled,1,0.67,,,,,2025,TRUE,Sec. 7 (GPT-5 adaptive routing case study),human_verified,Values stated in text; no SD reported.\nTWE0099,JEGHAM2025,,chat_medium,medium,\"Medium prompt (1000 in / 1000 out tokens), minimal reasoning\",GPT-5 (minimal reasoning),OpenAI,Microsoft Azure (assumed),proprietary,not specified,1000,1000,,2.33,,,,none,2.33,Wh/query (average),yes,yes,no,yes,no,modeled,1,2.33,,,,,2025,TRUE,Sec. 7 (GPT-5 adaptive routing case study),human_verified,Values stated in text; no SD reported.\nTWE0100,JEGHAM2025,,chat_reasoning,medium,\"Medium prompt (1000 in / 1000 out tokens), high reasoning\",GPT-5 (high reasoning),OpenAI,Microsoft Azure (assumed),proprietary,not specified,1000,1000,,17.15,,,,none,17.15,Wh/query (average),yes,yes,no,yes,no,modeled,1,17.15,,,,,2025,TRUE,Sec. 7 (GPT-5 adaptive routing case study),human_verified,Values stated in text; no SD reported.\nTWE0101,JEGHAM2025,,chat_reasoning,long,\"Long prompt (10000 in / 1500 out tokens), high reasoning\",GPT-5 (high reasoning),OpenAI,Microsoft Azure (assumed),proprietary,not specified,10000,1500,,33.8,,,,none,33.8,Wh/query (average),yes,yes,no,yes,no,modeled,1,33.8,,,,,2025,FALSE,Sec. 7 (GPT-5 adaptive routing case study),human_verified,Values stated in text; no SD reported.\nTWE0102,LUCCIONI2024,,text_classification,,Text classification: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.002,,,0.001,SD,0.002 +/- 0.001,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.00226,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0103,LUCCIONI2024,,extractive_qa,,Extractive question answering: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.003,,,0.001,SD,0.003 +/- 0.001,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.00339,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0104,LUCCIONI2024,,masked_lm,,Masked language modelling: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.003,,,0.001,SD,0.003 +/- 0.001,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.00339,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0105,LUCCIONI2024,,token_classification,,Token classification: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.004,,,0.002,SD,0.004 +/- 0.002,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.00452,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0106,LUCCIONI2024,,image_classification,,Image classification: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.007,,,0.001,SD,0.007 +/- 0.001,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.00791,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0107,LUCCIONI2024,,object_detection,,Object detection: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.038,,,0.02,SD,0.038 +/- 0.02,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.04294,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0108,LUCCIONI2024,,text_generation_10tok,,Text generation (10 new tokens per input): one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.047,,,0.03,SD,0.047 +/- 0.03,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.05311,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0109,LUCCIONI2024,,summarization,,Summarization: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.049,,,0.01,SD,0.049 +/- 0.01,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.05537,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0110,LUCCIONI2024,,image_captioning,,Image captioning: one inference (mean over task-specific models),8 most-downloaded task-specific models,multiple,AWS us-west-2,open-weights,\"NVIDIA A100-SXM4-80GB (8-GPU node, 1 GPU used)\",,,,0.063,,,0.02,SD,0.063 +/- 0.02,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,0.07119,,,,,2023,TRUE,Table 2,human_verified,Idle power of the other node GPUs is reflected in the measurements (paper footnote).\nTWE0111,LUCCIONI2024,,image_generation,,\"Image generation: one image (task-level median across 8 models, default image sizes)\",\"8 text-to-image models (incl. SDXL base 1.0, SD 1.5/2.1)\",multiple,AWS us-west-2,open-weights,NVIDIA A100-SXM4-80GB,,,,1.35,,11.49,,median; high = least-efficient model,median 1.35; least efficient 11.49,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,1.5255,,,,,2023,TRUE,Sec. 4.1,human_verified,Mean across models 2.907 +/- 3.31 (Table 2). Default settings generate larger images than many benchmarks.\nTWE0112,LUCCIONI2024,,image_generation,,Image generation: one image (task-level mean across 8 models),8 text-to-image models,multiple,AWS us-west-2,open-weights,NVIDIA A100-SXM4-80GB,,,,2.907,,,3.31,SD,2.907 +/- 3.31,\"kWh per 1,000 inferences\",yes,yes,partial,no,no,measured,1.13,3.28491,,,,,2023,FALSE,Table 2,human_verified,Same distribution as the median row; excluded from defaults to avoid double counting.\nTWE0113,MITTR2025,,chat_short,,Text response (ML.ENERGY prompt batch),Llama 3.1 8B,Meta,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,0.03167,,,,none,57 J GPU; 114 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,0.03167,,,,,2025,FALSE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other). Simple prompts often used ~9x less energy than complex ones.\"\nTWE0114,MITTR2025,,chat_short,,Text response (ML.ENERGY prompt batch),Llama 3.1 405B,Meta,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,1.86278,,,,none,3353 J GPU; 6706 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,1.86278,,,,,2025,FALSE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other).\"\nTWE0115,MITTR2025,,image_generation,,\"1024x1024 image, 25 diffusion steps (standard quality)\",Stable Diffusion 3 Medium (2B),Stability AI,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,0.63389,,,,none,1141 J GPU; 2282 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,0.63389,,,,,2025,TRUE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other).\"\nTWE0116,MITTR2025,,image_generation,,\"1024x1024 image, 50 diffusion steps (higher quality)\",Stable Diffusion 3 Medium (2B),Stability AI,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,1.22278,,,,none,4402 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,1.22278,,,,,2025,TRUE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other). Total stated as 'about 4,402 joules'.\"\nTWE0117,MITTR2025,,video_generation,,Short low-quality clip at 8 fps (older model),CogVideoX (older version),Zhipu AI / Tsinghua,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,30.27778,,,,none,109000 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,30.2778,,,,,2025,FALSE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other). GIF-like output; value assumed to be the doubled total per the methodology.\"\nTWE0118,MITTR2025,,video_generation,,\"5-second clip at 16 fps (newer, higher-quality model)\",CogVideoX (newer version),Zhipu AI / Tsinghua,ML.ENERGY / AI Energy Score testbeds,open-weights,NVIDIA H100,,,,944.44444,,,,none,3400000 J total,J,yes,approx,approx,approx,no,measured_gpu_x2_heuristic,1,944.444,,,,,2025,TRUE,Part Two: A Query,human_verified,\"GPU energy doubled to approximate total (cooling, CPUs, other). Value assumed to be the doubled total per the methodology; >700x a high-quality image.\"\nTWE0119,HFVIDEO2025,,video_generation,,\"One clip: 16 frames at 10 fps (~1.6 s), 512x512, 4 steps\",AnimateDiff-Lightning,multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,512x512; 16 frames; 10 fps; 4 steps; ~1.6 s,0.14,,,,none,GPU 0.11 + CPU 0.02 + RAM 0.01 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,0.1582,,,,,2025,FALSE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0120,HFVIDEO2025,,video_generation,,\"One clip: 121 frames at 24 fps (~5.04 s), 512x704, 30 steps\",LTX-Video-0.9.7-dev (13B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,512x704; 121 frames; 24 fps; 30 steps; ~5.04 s,3.79,,,,none,GPU 3.19 + CPU 0.41 + RAM 0.19 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,4.2827,,,,,2025,TRUE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0121,HFVIDEO2025,,video_generation,,\"One clip: 49 frames at 8 fps (~6.12 s), 480x720, 50 steps\",CogVideoX-2b (2B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,480x720; 49 frames; 8 fps; 50 steps; ~6.12 s,10.08,,,,none,GPU 8.32 + CPU 1.21 + RAM 0.55 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,11.3904,,,,,2025,FALSE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0122,HFVIDEO2025,,video_generation,,\"One clip: 49 frames at 8 fps (~6.12 s), 480x720, 50 steps\",CogVideoX-5b (5B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,480x720; 49 frames; 8 fps; 50 steps; ~6.12 s,25.93,,,,none,GPU 21.71 + CPU 2.91 + RAM 1.31 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,29.3009,,,,,2025,FALSE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0123,HFVIDEO2025,,video_generation,,\"One clip: 81 frames at 15 fps (~5.4 s), 480x832, 60 steps\",WAN2.1-T2V-1.3B (1.3B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,480x832; 81 frames; 15 fps; 60 steps; ~5.4 s,22.8,,,,none,GPU 19.73 + CPU 1.98 + RAM 1.09 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,25.764,,,,,2025,FALSE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0124,HFVIDEO2025,,video_generation,,\"One clip: 81 frames at 15 fps (~5.4 s), 480x832, 60 steps\",WAN2.1-T2V-14B (14B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,480x832; 81 frames; 15 fps; 60 steps; ~5.4 s,109.47,,,,none,GPU 93.83 + CPU 10.47 + RAM 5.17 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,123.701,,,,,2025,TRUE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0125,HFVIDEO2025,,video_generation,,\"One clip: 84 frames at 30 fps (~2.8 s), 480x848, 64 steps\",Mochi-1-preview (10B),multiple,Hugging Face testbed,open-weights,1x NVIDIA H100 80GB HBM3,,,480x848; 84 frames; 30 fps; 64 steps; ~2.8 s,56.06,,,,none,GPU 46.77 + CPU 6.4 + RAM 2.89 Wh,Wh per clip,yes,yes,no,no,no,measured,1.13,63.3478,,,,,2025,FALSE,Table 'Energy Use: The Numbers',human_verified,\"Model-recommended settings, so clips differ in length and resolution.\"\nTWE0126,MISTRAL2025,,chat_short,,\"Le Chat 400-token response (marginal inference, excluding user terminals)\",Mistral Large 2,Mistral AI,unspecified,open-weights,,,400,,,,,,none,1.14 gCO2e; 45 mL water; 0.16 mg Sb eq,per response,yes,yes,unknown,yes,yes,lca,,,1.14,life-cycle (incl. embodied),45,life-cycle (incl. electricity generation and manufacturing),2025-01,FALSE,Headline figures,human_verified,Energy per response not disclosed.\nTWE0127,DEVRIES2023,,chat_short,,ChatGPT request (early 2023),ChatGPT (GPT-3.5 era),OpenAI,assumed,proprietary,NVIDIA A100 HGX (assumed by SemiAnalysis),,,,2.9,,,,upper bound,at most 2.9,Wh/request,yes,approx,no,no,no,modeled,1.13,3.277,,,,,2023-02,FALSE,Main text,human_verified,\"564 MWh/day over 195M requests/day (SemiAnalysis). EPOCH2025 attributes most of the gap to assumed 4,000 input / 2,000 output tokens. Historical; superseded.\"\nTWE0128,DEVRIES2023,,ai_search_query,,Google search answered by an LLM (scenario),LLM-powered search (scenario),Google (scenario),assumed,proprietary,,,,,,6.9,8.9,,scenario range,6.9-8.9,Wh/request,yes,approx,no,no,no,modeled,1.13,,,,,,2023,FALSE,Main text,human_verified,Hypothetical 2023 scenario; no point estimate.\nTWE0129,COUCH2026,,agentic_coding_session,,Median Claude Code session (author's own logs),Claude Opus 4.5 (mostly),Anthropic,unspecified,proprietary,,,,,41,,,,none,41,Wh/session (median),yes,approx,no,approx,no,estimated_from_tokens,1,41,,,,,2025-12/2026-01,TRUE,Section 'My Claude Code data',human_verified,~138x a 0.3 Wh 'typical query'. HAUSFATHER2026 reports this session as 24 model calls and 592k tokens. Boundary inherited from EPOCH2025 anchor.\nTWE0130,COUCH2026,,agentic_coding_day,,Median day of Claude Code use (author),Claude Opus 4.5 (mostly),Anthropic,unspecified,proprietary,,,,,1300,,,,none,\"1,300\",Wh/day (median),yes,approx,no,approx,no,estimated_from_tokens,1,1300,,,,,2025-12/2026-01,TRUE,Section 'My Claude Code data',human_verified,\"~4,400 'typical queries' of 0.3 Wh.\"\nTWE0131,HAUSFATHER2026,,agentic_task,,One prompt to a coding agent (all model calls it triggers),Claude Code (Anthropic models),Anthropic,unspecified,proprietary,,,,,150,60,290,,scenario (cache-read energy 1-25%),~150 (60-290),Wh/prompt,unknown,unknown,unknown,unknown,unknown,estimated_from_tokens,1,150,,,,,2026 (8 weeks),TRUE,Subtitle; section 'Measuring my own footprint',human_verified,\"~600x (250-1,200x) a median chat prompt. Bistline (2026) activity-tier factors; ~96% of tokens are cache reads.\"\nTWE0132,HAUSFATHER2026,,agentic_coding_session,,Median Claude Code session (author's own logs),Claude Code (Anthropic models),Anthropic,unspecified,proprietary,,,,,600,250,1200,,scenario (cache-read energy 1-25%),~0.6 kWh (0.25-1.2),kWh/session,unknown,unknown,unknown,unknown,unknown,estimated_from_tokens,1,600,,,,,2026 (8 weeks),TRUE,Section 'Measuring my own footprint',human_verified,Sessions here involve >100 calls and ~10M tokens per secondary summaries.\nTWE0133,HAUSFATHER2026,,agentic_coding_day,,Average day of Claude Code use (author),Claude Code (Anthropic models),Anthropic,unspecified,proprietary,,,,,3000,1200,5900,,scenario (cache-read energy 1-25%),3.0 kWh (1.2-5.9),kWh/day,unknown,unknown,unknown,unknown,unknown,estimated_from_tokens,1,3000,,,,,2026 (8 weeks),TRUE,Section 'Measuring my own footprint',human_verified,Annualised ~1.1 MWh (0.4-2.2).\nTWE0134,HAUSFATHER2026,,agentic_coding_session,,\"100k-token Claude Opus agent session (Masley calculator, June 2026, as reported)\",Claude Opus (EcoLogits-based calculator),Anthropic,unspecified,proprietary,,100000,,,459,,,,none,~459,Wh/session,unknown,unknown,unknown,unknown,unknown,secondary_report,1,459,,,,,2026-06,FALSE,Section 'Agents supercharge AI usage',human_verified,Second-hand value (Andy Masley's calculator built on EcoLogits v0.10); excluded from defaults.\n","sources.csv":"source_id,short_name,title,authors,organization,year,date,source_type,peer_reviewed,venue,url,doi,accessed,notes\nGOOGLE2025,Google 2025,Measuring the environmental impact of delivering AI at Google Scale,Elsworth C.; Huang K.; Patterson D.; Schneider I.; Sedivy R.; Goodman S.; Townsend B.; Ranganathan P.; Dean J.; Vahdat A.; Gomes B.; Manyika J.,Google,2025,2025-08-21,company_research_preprint,no,arXiv:2508.15734 [cs.AI],https://arxiv.org/abs/2508.15734,10.48550/arXiv.2508.15734,2026-10-25,First-party in-situ fleet measurement. Defines an 'Existing Approach' (active accelerators only) and a 'Comprehensive Approach' (accelerators + host + idle + PUE overhead).\nALTMAN2025,Altman 2025,The Gentle Singularity,Altman S.,OpenAI,2025,2025-06-10,company_disclosure,no,Personal blog of OpenAI CEO,https://blog.samaltman.com/the-gentle-singularity,,2026-10-25,Per-query energy and water stated without methodology or boundary.\nEPOCH2025,Epoch AI 2025,How much energy does ChatGPT use?,You J.,Epoch AI,2025,2025-02-07,research_newsletter,no,Epoch AI Gradient Updates,https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use,,2026-10-25,\"Bottom-up model (GPT-4o, H100, 10% compute utilization, 70% power utilization). Licensed CC BY 4.0.\"\nOVIEDO2026,Oviedo et al. 2026,\"Energy use of AI inference, efficiency pathways, and test-time scaling\",Oviedo F.; Kazhamiaka F.; Choukse E.; Kim A.; Luers A.; Nakagawa M.; Bianchini R.; Lavista Ferres J.M.,Microsoft,2026,2026,peer_reviewed_article,yes,Joule (2026) 102430,https://doi.org/10.1016/j.joule.2026.102430,10.1016/j.joule.2026.102430,2026-10-25,Preprint arXiv:2509.20241. Bottom-up framework (token throughput x node power x PUE) for frontier-scale models on H100 nodes.\nJEGHAM2025,Jegham et al. 2025,\"How Hungry is AI? Benchmarking Energy, Water, and Carbon Footprint of LLM Inference\",Jegham N.; Abdelatti M.; Koh C.Y.; Elmoubarki L.; Hendawi A.,University of Rhode Island; University of Tunis; Providence College,2025,2025,preprint,no,arXiv:2505.09598v5 [cs.CY],https://arxiv.org/abs/2505.09598,10.48550/arXiv.2505.09598,2026-10-25,Values from Table 4 and Sec. 7 (v5): API latency/throughput x rated power x utilization x PUE; idle GPUs excluded. Spot check against v6 (2025-11-24): identical values for the rows checked.\nLUCCIONI2024,Luccioni et al. 2024,Power Hungry Processing: Watts Driving the Cost of AI Deployment?,Luccioni A.S.; Jernite Y.; Strubell E.,Hugging Face; Carnegie Mellon University,2024,2024-06,peer_reviewed_conference,yes,ACM FAccT '24,https://doi.org/10.1145/3630106.3658542,10.1145/3630106.3658542,2026-10-25,\"arXiv:2311.16863v3. CodeCarbon (GPU+CPU+RAM) on an 8xA100-80GB AWS node, sequential inference without batching, no PUE.\"\nMITTR2025,MIT Technology Review 2025,We did the math on AI's energy footprint. Here's the story you haven't heard.,O'Donnell J.; Crownhart C.,MIT Technology Review,2025,2025-05-20,journalism_with_measurements,no,MIT Technology Review,https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/,,2026-10-25,\"GPU energy measured on H100 by the ML.ENERGY team (text, image) and with CodeCarbon by the AI Energy Score team (video), then doubled to approximate total energy. Methodology: https://www.technologyreview.com/2025/05/20/1116331/ai-energy-demand-methodology/\"\nHFVIDEO2025,Hugging Face video benchmark 2025,How Much Power does a SOTA Open Video Model Use?,Delavande J.; Luccioni S.; Pierrard R.,Hugging Face,2025,2025-07-02,benchmark_blog,no,Hugging Face blog,https://huggingface.co/blog/jdelavande/text-to-video-energy-cost,,2026-10-25,\"1x H100 80GB, CodeCarbon (GPU+CPU+RAM), each model run with its recommended settings; 5 measured runs. Related paper: arXiv:2509.19222.\"\nMISTRAL2025,Mistral AI 2025,Our contribution to a global environmental standard for AI,Mistral AI; Carbone 4; ADEME,Mistral AI,2025,2025-07-22,company_lca,third_party_review,mistral.ai,https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai,,2026-10-25,\"Life-cycle analysis of Mistral Large 2, reviewed by Resilio and Hubblo. Per-response energy not disclosed.\"\nDEVRIES2023,de Vries 2023,The growing energy footprint of artificial intelligence,de Vries A.,VU Amsterdam; Digiconomist,2023,2023-10-10,peer_reviewed_commentary,yes,Joule 7(10):2191-2194,https://doi.org/10.1016/j.joule.2023.09.004,10.1016/j.joule.2023.09.004,2026-10-25,Early estimate derived from SemiAnalysis assumptions (early 2023). Origin of the widely cited ~3 Wh per query figure.\nCOUCH2026,Couch 2026,Electricity use of AI coding agents,Couch S.P.,independent,2026,2026-01-20,blog_estimate,no,simonpcouch.com,https://simonpcouch.com/blog/2026-01-20-cc-impact/,,2026-10-25,\"Per-token factors back-solved from the EPOCH2025 long-input anchor and API price ratios, applied to the author's own Claude Code logs.\"\nHAUSFATHER2026,Hausfather 2026,The real energy use of agentic AI,Hausfather Z.,The Climate Brink,2026,2026-08-05,blog_estimate,no,The Climate Brink (Substack),https://www.theclimatebrink.com/p/the-real-energy-use-of-agentic-ai,,2026-10-25,\"Author's Claude Code logs (1,138 prompts over 8 weeks, 3.2 billion tokens) converted with Bistline (2026) activity-tier factors; ranges span cache-read energy at 1-25% of fresh input.\"\nIEA2025,IEA 2025,Energy and AI (Executive summary),International Energy Agency,IEA,2025,2025-04-10,intergovernmental_report,no,IEA,https://www.iea.org/reports/energy-and-ai/executive-summary,,2026-10-25,Base Case unless stated.\nGARTNER2026,Gartner 2026,Gartner Says Data Center Electricity Consumption to Grow 26% in 2026,Gartner,\"Gartner, Inc.\",2026,2026-06-10,industry_forecast,no,Gartner press release,https://www.gartner.com/en/newsroom/press-releases/2026-06-10-gartner-says-data-center-electricity-demand-to-grow-26-percent-in-2026,,2026-10-25,Segment values (AI-optimized vs conventional servers) taken from the press-release table as reproduced by ITNEWS2026.\nITNEWS2026,iTnews 2026,Gartner: Data centre electricity demand to grow 27% in 2026,Gliddon J.,iTnews / TechPartner News,2026,2026-06-16,news,no,TechPartner News,https://www.techpartner.news/news/gartner-data-centre-electricity-demand-to-grow-27-in-2026-626665,,2026-10-25,Reproduces Gartner segment table.\nLBNL2024,LBNL 2024,2024 United States Data Center Energy Usage Report,Shehabi A.; Smith S.J.; et al.,Lawrence Berkeley National Laboratory,2024,2024-12,government_lab_report,no,LBNL / US DOE,https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report.pdf,,2026-10-25,Headline values via the US DOE announcement (2024-12-20) and MITTR2025.\nOWID_ENERGY,Our World in Data energy data,Energy dataset: carbon_intensity_elec (Lifecycle carbon intensity of electricity generation),Our World in Data,Our World in Data (data from Ember),2026,2026-10-25,dataset,no,github.com/owid/energy-data,https://github.com/owid/energy-data,,2026-10-25,\"CC BY 4.0. Underlying source: Ember Yearly Electricity Data (2026). Latest available year per country, years >= 2022 kept.\"\nEIA2025,EIA 2025,Forecast wholesale power prices and retail electricity prices rise modestly in 2025,Hodge T. (principal contributor); US Energy Information Administration,EIA,2025,2025-01-27,government_statistics,no,EIA Today in Energy,https://www.eia.gov/TODAYinENERGY/detail.php?id=64384,,2026-10-25,16.8 US cents/kWh forecast average residential price for 2025. Used only as the editable default price in the app.\nEPA_EQUIV,US EPA equivalencies,Greenhouse Gas Equivalencies Calculator - Calculations and References,US Environmental Protection Agency,EPA,2024,2024,government_reference,no,EPA,https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references,,2026-10-25,Smartphone charge value as cited in LUCCIONI2024 (0.022 kWh; earlier EPA value 0.012 kWh).\nGOOGLE2009,Google 2009,Powering a Google search,Google,Google,2009,2009-01,company_blog,no,Official Google Blog,https://googleblog.blogspot.com/2009/01/powering-google-search.html,,2026-10-25,\"0.3 Wh per search, as cited by EPOCH2025 and DEVRIES2023.\"\nMLENERGY2025,ML.ENERGY Benchmark,The ML.ENERGY Benchmark: Toward Automated Inference Energy Measurement and Optimization,Chung J.-W.; Ma J.J.; Wu R.; Liu J.; Kweon O.J.; Xia Y.; Wu Z.; Chowdhury M.,University of Michigan,2025,2025-05,peer_reviewed_conference,yes,NeurIPS 2025 (spotlight poster); arXiv:2505.06371,https://arxiv.org/abs/2505.06371,10.48550/arXiv.2505.06371,2026-10-25,GPU energy measured with Zeus. Values in this dataset are as tabulated in OVIEDO2026.\nCLAUDECARBON2026,claude-carbon 2026,How much CO2 does a Claude Code session actually emit?,gwittebolle (DEV Community),independent (claude-carbon project),2026,2026,blog_estimate,no,DEV Community,https://dev.to/gwittebolle/how-much-co2-does-a-claude-code-session-actually-emit-1gna,,2026-10-25,Per-token regression through the origin fitted on JEGHAM2025 Claude 3.7 Sonnet values.\n","task_defaults.csv":"task_id,label,family,in_app,central_wh,low_wh,high_wh,geomean_wh,n_estimates,n_sources,median_all_rows_wh,n_all_rows,estimate_ids,rule,factor_accel,pue_ref\nchat_short,Short chat answer,text,yes,0.34,0.16,0.99,0.4128,7,5,0.45,33,TWE0001 TWE0003 TWE0004 TWE0007 TWE0038 TWE0061 TWE0098,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nchat_medium,Longer chat answer,text,no,2.33,0.974,3.19,2.038,3,1,2.33,23,TWE0039 TWE0062 TWE0099,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nchat_reasoning,Reasoning answer,text,yes,4.742,1.142,34,5.561,10,2,4.331,27,TWE0008 TWE0021 TWE0024 TWE0027 TWE0030 TWE0033 TWE0036 TWE0050 TWE0056 TWE0100,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nlong_document,Chat over a long document,text,yes,2.875,2.454,5.973,3.441,3,2,3.397,20,TWE0005 TWE0040 TWE0063,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nvery_long_input,Very long input,text,no,40,40,40,40,1,1,40,1,TWE0006,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nagentic_task,One task delegated to an AI agent,agentic,yes,150,60,290,150,1,1,150,1,TWE0131,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nagentic_coding_session,One coding-agent session,agentic,no,320.5,41,1200,156.8,2,2,459,3,TWE0129 TWE0132,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nagentic_coding_day,One developer-day of coding agents,agentic,no,2150,1200,5900,1975,2,2,2150,2,TWE0130 TWE0133,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nimage_generation,Generate one image,image,yes,1.223,0.6339,12.98,1.057,3,2,1.374,4,TWE0111 TWE0115 TWE0116,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nvideo_generation,Generate one short video,video,yes,123.7,4.283,944.4,79.39,3,2,29.3,9,TWE0118 TWE0120 TWE0124,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\ntext_classification,Text classification,classic,no,0.00226,0.00113,0.00339,0.00226,1,1,0.00226,1,TWE0102,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nextractive_qa,Extractive question answering,classic,no,0.00339,0.00226,0.00452,0.00339,1,1,0.00339,1,TWE0103,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nmasked_lm,Masked language modelling,classic,no,0.00339,0.00226,0.00452,0.00339,1,1,0.00339,1,TWE0104,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\ntoken_classification,Token classification,classic,no,0.00452,0.00226,0.00678,0.00452,1,1,0.00452,1,TWE0105,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nimage_classification,Image classification,classic,no,0.00791,0.00678,0.00904,0.00791,1,1,0.00791,1,TWE0106,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nobject_detection,Object detection,classic,no,0.04294,0.02034,0.06554,0.04294,1,1,0.04294,1,TWE0107,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\ntext_generation_10tok,Short text generation (10 tokens),classic,no,0.05311,0.01921,0.08701,0.05311,1,1,0.05311,1,TWE0108,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nsummarization,Summarization,classic,no,0.05537,0.04407,0.06667,0.05537,1,1,0.05537,1,TWE0109,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\nimage_captioning,Image captioning,classic,no,0.07119,0.04859,0.09379,0.07119,1,1,0.07119,1,TWE0110,\"central = median of harmonized reference-set points; low/high = min/max of harmonized reported intervals (IQR, range, or mean +/- SD clipped at 0)\",1.72,1.13\n","tasks.csv":"task_id,family,label,description,reference_config,in_app\nchat_short,text,Short chat answer,\"One short exchange with a chat assistant (~100-500 input tokens, ~250-500 visible output tokens, no extended reasoning).\",\"Default model of a major consumer assistant (ChatGPT, Gemini, Claude) in 2025-2026, or a generic frontier-scale (>200B) production estimate; first-hand point estimate.\",yes\nchat_medium,text,Longer chat answer,\"~1k input and ~1k output tokens, no extended reasoning.\",Default assistant models as for chat_short.,no\nchat_reasoning,text,Reasoning answer,Answer from a reasoning model or reasoning mode; includes hidden reasoning tokens.,\"All reasoning-model rows at the medium prompt size, plus generic test-time-scaling estimates.\",yes\nlong_document,text,Chat over a long document,\"~10k input tokens (~7,500 words) with ~500-1,500 output tokens.\",Default assistant models plus generic frontier estimates.,yes\nvery_long_input,text,Very long input,~100k input tokens.,All first-hand rows.,no\nai_search_query,text,AI-generated search answer,A web search answered by an LLM.,None (historical scenario only).,no\nagentic_task,agentic,One task delegated to an AI agent,\"One user prompt to a coding or computer-use agent, including every model call and tool step it triggers.\",All first-hand rows.,yes\nagentic_coding_session,agentic,One coding-agent session,A full coding-agent session made of many prompts and model calls.,First-hand rows only.,no\nagentic_coding_day,agentic,One developer-day of coding agents,Daily coding-agent use by one developer.,First-hand rows only.,no\nimage_generation,image,Generate one image,One image at ~1024x1024 or the model's default size.,\"Measured open text-to-image models (task-level medians accepted); per-model rows and task medians, not task means.\",yes\nvideo_generation,video,Generate one short video,One clip of a few seconds.,Clips >= 4.5 s at >= 15 fps from models >= 5B parameters or described as higher quality.,yes\ntext_classification,classic,Text classification,One inference.,Single source.,no\nextractive_qa,classic,Extractive question answering,One inference.,Single source.,no\nmasked_lm,classic,Masked language modelling,One inference.,Single source.,no\ntoken_classification,classic,Token classification,One inference.,Single source.,no\nimage_classification,classic,Image classification,One inference.,Single source.,no\nobject_detection,classic,Object detection,One inference.,Single source.,no\ntext_generation_10tok,classic,Short text generation (10 tokens),One inference generating 10 new tokens.,Single source.,no\nsummarization,classic,Summarization,One inference.,Single source.,no\nimage_captioning,classic,Image captioning,One inference.,Single source.,no\n","grid_carbon.csv":"region,iso_code,year,carbon_intensity_gco2e_per_kwh,source_id\nAfghanistan,AFG,2024,131.3,OWID_ENERGY\nAlbania,ALB,2024,25.2,OWID_ENERGY\nAlgeria,DZA,2024,632.9,OWID_ENERGY\nAmerican Samoa,ASM,2024,611.1,OWID_ENERGY\nAngola,AGO,2024,185.4,OWID_ENERGY\nAntigua and Barbuda,ATG,2024,594.6,OWID_ENERGY\nArgentina,ARG,2025,346.0,OWID_ENERGY\nArmenia,ARM,2025,211.9,OWID_ENERGY\nAruba,ABW,2024,550.0,OWID_ENERGY\nAustralia,AUS,2025,525.2,OWID_ENERGY\nAustria,AUT,2025,116.9,OWID_ENERGY\nAzerbaijan,AZE,2025,631.9,OWID_ENERGY\nBahamas,BHS,2024,653.3,OWID_ENERGY\nBahrain,BHR,2024,902.2,OWID_ENERGY\nBangladesh,BGD,2025,696.1,OWID_ENERGY\nBarbados,BRB,2024,594.6,OWID_ENERGY\nBelarus,BLR,2025,309.2,OWID_ENERGY\nBelgium,BEL,2025,149.8,OWID_ENERGY\nBelize,BLZ,2024,170.2,OWID_ENERGY\nBenin,BEN,2024,584.2,OWID_ENERGY\nBermuda,BMU,2024,639.3,OWID_ENERGY\nBhutan,BTN,2024,23.6,OWID_ENERGY\nBolivia,BOL,2025,481.3,OWID_ENERGY\nBosnia and Herzegovina,BIH,2025,570.6,OWID_ENERGY\nBotswana,BWA,2024,851.3,OWID_ENERGY\nBrazil,BRA,2025,110.0,OWID_ENERGY\nBritish Virgin Islands,VGB,2023,647.1,OWID_ENERGY\nBrunei,BRN,2024,892.1,OWID_ENERGY\nBulgaria,BGR,2025,275.6,OWID_ENERGY\nBurkina Faso,BFA,2024,562.1,OWID_ENERGY\nBurundi,BDI,2024,183.7,OWID_ENERGY\nCambodia,KHM,2025,498.9,OWID_ENERGY\nCameroon,CMR,2024,225.9,OWID_ENERGY\nCanada,CAN,2025,190.7,OWID_ENERGY\nCape Verde,CPV,2024,461.5,OWID_ENERGY\nCayman Islands,CYM,2024,633.8,OWID_ENERGY\nCentral African Republic,CAF,2023,0.0,OWID_ENERGY\nChad,TCD,2024,621.6,OWID_ENERGY\nChile,CHL,2025,289.5,OWID_ENERGY\nChina,CHN,2025,525.3,OWID_ENERGY\nColombia,COL,2025,186.8,OWID_ENERGY\nComoros,COM,2023,642.9,OWID_ENERGY\nCongo,COG,2024,716.1,OWID_ENERGY\nCook Islands,COK,2024,250.0,OWID_ENERGY\nCosta Rica,CRI,2025,24.2,OWID_ENERGY\nCote d'Ivoire,CIV,2024,405.0,OWID_ENERGY\nCroatia,HRV,2025,158.5,OWID_ENERGY\nCuba,CUB,2024,642.8,OWID_ENERGY\nCyprus,CYP,2025,489.0,OWID_ENERGY\nCzechia,CZE,2025,401.5,OWID_ENERGY\nDemocratic Republic of Congo,COD,2024,27.6,OWID_ENERGY\nDenmark,DNK,2025,114.4,OWID_ENERGY\nDjibouti,DJI,2024,450.0,OWID_ENERGY\nDominica,DMA,2023,600.0,OWID_ENERGY\nDominican Republic,DOM,2025,537.5,OWID_ENERGY\nEast Timor,TLS,2024,666.7,OWID_ENERGY\nEcuador,ECU,2025,159.0,OWID_ENERGY\nEgypt,EGY,2025,563.2,OWID_ENERGY\nEl Salvador,SLV,2025,139.3,OWID_ENERGY\nEquatorial Guinea,GNQ,2024,644.3,OWID_ENERGY\nEritrea,ERI,2024,577.8,OWID_ENERGY\nEstonia,EST,2025,319.1,OWID_ENERGY\nEswatini,SWZ,2024,131.2,OWID_ENERGY\nEthiopia,ETH,2025,23.1,OWID_ENERGY\nFalkland Islands,FLK,2023,1000.0,OWID_ENERGY\nFaroe Islands,FRO,2023,346.9,OWID_ENERGY\nFiji,FJI,2024,278.3,OWID_ENERGY\nFinland,FIN,2025,57.5,OWID_ENERGY\nFrance,FRA,2025,41.4,OWID_ENERGY\nFrench Guiana,GUF,2023,244.9,OWID_ENERGY\nFrench Polynesia,PYF,2024,430.6,OWID_ENERGY\nGabon,GAB,2024,523.1,OWID_ENERGY\nGambia,GMB,2024,666.7,OWID_ENERGY\nGeorgia,GEO,2025,145.9,OWID_ENERGY\nGermany,DEU,2025,329.6,OWID_ENERGY\nGhana,GHA,2024,468.9,OWID_ENERGY\nGibraltar,GIB,2024,590.9,OWID_ENERGY\nGreece,GRC,2025,315.1,OWID_ENERGY\nGreenland,GRL,2024,150.0,OWID_ENERGY\nGrenada,GRD,2024,666.7,OWID_ENERGY\nGuadeloupe,GLP,2023,497.0,OWID_ENERGY\nGuam,GUM,2024,607.5,OWID_ENERGY\nGuatemala,GTM,2024,301.5,OWID_ENERGY\nGuinea,GIN,2024,181.1,OWID_ENERGY\nGuinea-Bissau,GNB,2024,625.0,OWID_ENERGY\nGuyana,GUY,2024,644.9,OWID_ENERGY\nHaiti,HTI,2024,534.9,OWID_ENERGY\nHonduras,HND,2024,322.1,OWID_ENERGY\nHong Kong,HKG,2024,675.5,OWID_ENERGY\nHungary,HUN,2025,163.0,OWID_ENERGY\nIceland,ISL,2024,27.8,OWID_ENERGY\nIndia,IND,2025,670.1,OWID_ENERGY\nIndonesia,IDN,2024,680.2,OWID_ENERGY\nIran,IRN,2025,659.5,OWID_ENERGY\nIraq,IRQ,2024,683.1,OWID_ENERGY\nIreland,IRL,2025,256.5,OWID_ENERGY\nIsrael,ISR,2025,492.7,OWID_ENERGY\nItaly,ITA,2025,284.8,OWID_ENERGY\nJamaica,JAM,2024,563.0,OWID_ENERGY\nJapan,JPN,2025,477.3,OWID_ENERGY\nJordan,JOR,2024,529.8,OWID_ENERGY\nKazakhstan,KAZ,2025,805.3,OWID_ENERGY\nKenya,KEN,2025,95.4,OWID_ENERGY\nKiribati,KIR,2024,500.0,OWID_ENERGY\nKuwait,KWT,2025,635.3,OWID_ENERGY\nKyrgyzstan,KGZ,2025,152.7,OWID_ENERGY\nLaos,LAO,2024,232.1,OWID_ENERGY\nLatvia,LVA,2025,138.8,OWID_ENERGY\nLebanon,LBN,2024,389.5,OWID_ENERGY\nLesotho,LSO,2022,20.8,OWID_ENERGY\nLiberia,LBR,2024,315.8,OWID_ENERGY\nLibya,LBY,2024,826.8,OWID_ENERGY\nLithuania,LTU,2025,138.4,OWID_ENERGY\nLuxembourg,LUX,2025,123.4,OWID_ENERGY\nMacao,MAC,2024,474.4,OWID_ENERGY\nMadagascar,MDG,2024,432.1,OWID_ENERGY\nMalawi,MWI,2024,54.6,OWID_ENERGY\nMalaysia,MYS,2025,602.0,OWID_ENERGY\nMaldives,MDV,2024,611.8,OWID_ENERGY\nMali,MLI,2024,538.6,OWID_ENERGY\nMalta,MLT,2025,484.0,OWID_ENERGY\nMartinique,MTQ,2023,529.8,OWID_ENERGY\nMauritania,MRT,2024,512.1,OWID_ENERGY\nMauritius,MUS,2024,642.2,OWID_ENERGY\nMexico,MEX,2025,474.0,OWID_ENERGY\nMoldova,MDA,2025,633.1,OWID_ENERGY\nMongolia,MNG,2025,816.3,OWID_ENERGY\nMontenegro,MNE,2025,264.2,OWID_ENERGY\nMontserrat,MSR,2024,1000.0,OWID_ENERGY\nMorocco,MAR,2025,596.4,OWID_ENERGY\nMozambique,MOZ,2024,129.4,OWID_ENERGY\nMyanmar,MMR,2024,503.0,OWID_ENERGY\nNamibia,NAM,2024,48.8,OWID_ENERGY\nNauru,NRU,2024,600.0,OWID_ENERGY\nNepal,NPL,2024,24.3,OWID_ENERGY\nNetherlands,NLD,2025,253.6,OWID_ENERGY\nNew Caledonia,NCL,2024,560.9,OWID_ENERGY\nNew Zealand,NZL,2025,92.8,OWID_ENERGY\nNicaragua,NIC,2024,300.9,OWID_ENERGY\nNiger,NER,2024,673.7,OWID_ENERGY\nNigeria,NGA,2025,455.7,OWID_ENERGY\nNorth Korea,PRK,2024,340.6,OWID_ENERGY\nNorth Macedonia,MKD,2025,441.4,OWID_ENERGY\nNorway,NOR,2025,28.1,OWID_ENERGY\nOman,OMN,2025,544.5,OWID_ENERGY\nPakistan,PAK,2025,346.6,OWID_ENERGY\nPalestine,PSE,2024,414.1,OWID_ENERGY\nPanama,PAN,2024,221.2,OWID_ENERGY\nPapua New Guinea,PNG,2024,513.7,OWID_ENERGY\nParaguay,PRY,2025,24.7,OWID_ENERGY\nPeru,PER,2025,238.2,OWID_ENERGY\nPhilippines,PHL,2025,588.3,OWID_ENERGY\nPoland,POL,2025,588.6,OWID_ENERGY\nPortugal,PRT,2025,127.9,OWID_ENERGY\nPuerto Rico,PRI,2025,654.7,OWID_ENERGY\nQatar,QAT,2025,581.5,OWID_ENERGY\nReunion,REU,2023,394.1,OWID_ENERGY\nRomania,ROU,2025,250.8,OWID_ENERGY\nRussia,RUS,2025,449.7,OWID_ENERGY\nRwanda,RWA,2024,354.0,OWID_ENERGY\nSaint Helena,SHN,2023,1000.0,OWID_ENERGY\nSaint Kitts and Nevis,KNA,2024,608.7,OWID_ENERGY\nSaint Lucia,LCA,2024,650.0,OWID_ENERGY\nSaint Pierre and Miquelon,SPM,2023,600.0,OWID_ENERGY\nSaint Vincent and the Grenadines,VCT,2024,600.0,OWID_ENERGY\nSamoa,WSM,2024,375.0,OWID_ENERGY\nSao Tome and Principe,STP,2023,555.6,OWID_ENERGY\nSaudi Arabia,SAU,2024,692.0,OWID_ENERGY\nSenegal,SEN,2024,540.0,OWID_ENERGY\nSerbia,SRB,2025,695.8,OWID_ENERGY\nSeychelles,SYC,2024,555.6,OWID_ENERGY\nSierra Leone,SLE,2024,47.6,OWID_ENERGY\nSingapore,SGP,2025,497.1,OWID_ENERGY\nSlovakia,SVK,2025,94.8,OWID_ENERGY\nSlovenia,SVN,2025,183.3,OWID_ENERGY\nSolomon Islands,SLB,2024,636.4,OWID_ENERGY\nSomalia,SOM,2024,511.6,OWID_ENERGY\nSouth Africa,ZAF,2025,699.3,OWID_ENERGY\nSouth Korea,KOR,2025,417.1,OWID_ENERGY\nSouth Sudan,SSD,2024,642.9,OWID_ENERGY\nSpain,ESP,2025,153.6,OWID_ENERGY\nSri Lanka,LKA,2025,329.3,OWID_ENERGY\nSudan,SDN,2024,153.7,OWID_ENERGY\nSuriname,SUR,2024,321.8,OWID_ENERGY\nSweden,SWE,2025,35.3,OWID_ENERGY\nSwitzerland,CHE,2025,39.2,OWID_ENERGY\nSyria,SYR,2024,706.2,OWID_ENERGY\nTaiwan,TWN,2025,633.2,OWID_ENERGY\nTajikistan,TJK,2025,72.6,OWID_ENERGY\nTanzania,TZA,2024,345.0,OWID_ENERGY\nThailand,THA,2025,545.7,OWID_ENERGY\nTogo,TGO,2024,422.5,OWID_ENERGY\nTonga,TON,2024,571.4,OWID_ENERGY\nTrinidad and Tobago,TTO,2024,681.7,OWID_ENERGY\nTunisia,TUN,2025,560.3,OWID_ENERGY\nTurkey,TUR,2025,474.7,OWID_ENERGY\nTurkmenistan,TKM,2024,1306.3,OWID_ENERGY\nTurks and Caicos Islands,TCA,2024,629.6,OWID_ENERGY\nUganda,UGA,2024,58.5,OWID_ENERGY\nUkraine,UKR,2022,250.5,OWID_ENERGY\nUnited Arab Emirates,ARE,2024,467.5,OWID_ENERGY\nUnited Kingdom,GBR,2025,217.4,OWID_ENERGY\nUnited States,USA,2025,384.4,OWID_ENERGY\nUnited States Virgin Islands,VIR,2023,632.4,OWID_ENERGY\nUruguay,URY,2025,80.4,OWID_ENERGY\nUzbekistan,UZB,2025,1000.0,OWID_ENERGY\nVanuatu,VUT,2023,500.0,OWID_ENERGY\nVenezuela,VEN,2024,85.9,OWID_ENERGY\nVietnam,VNM,2025,460.7,OWID_ENERGY\nYemen,YEM,2024,592.4,OWID_ENERGY\nZambia,ZMB,2024,119.7,OWID_ENERGY\nZimbabwe,ZWE,2024,384.0,OWID_ENERGY\nAfrica,,2024,544.1,OWID_ENERGY\nAsia,,2024,573.4,OWID_ENERGY\nEurope,,2025,271.2,OWID_ENERGY\nEuropean Union (27),,2025,209.9,OWID_ENERGY\nNorth America,,2024,369.1,OWID_ENERGY\nOceania,,2024,494.8,OWID_ENERGY\nSouth America,,2024,166.8,OWID_ENERGY\nWorld,,2025,458.3,OWID_ENERGY\n","macro.csv":"macro_id,indicator,region,year,value,value_low,value_high,unit,kind,scenario,source_id,reported_in,locator,verification,notes\nTWM001,data_centre_electricity,World,2024,415,,,TWh,estimate,,IEA2025,,Executive summary,human_verified,~1.5% of world electricity consumption\nTWM002,data_centre_electricity_share,World,2024,1.5,,,% of electricity consumption,estimate,,IEA2025,,Executive summary,human_verified,\nTWM003,data_centre_electricity_growth,World,2017-2024,12,,,%/yr,estimate,,IEA2025,,Executive summary,human_verified,More than four times faster than total electricity consumption\nTWM004,data_centre_electricity,World,2030,945,,,TWh,projection,Base Case,IEA2025,,Executive summary,human_verified,\nTWM005,data_centre_electricity,World,2035,1200,700,1700,TWh,projection,Base Case (range across cases),IEA2025,,Executive summary,human_verified,\nTWM006,data_centre_electricity_share_by_region,United States,2024,45,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,\nTWM007,data_centre_electricity_share_by_region,China,2024,25,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,\nTWM008,data_centre_electricity_share_by_region,Europe,2024,15,,,% of global data-centre consumption,estimate,,IEA2025,,Executive summary,human_verified,\nTWM009,data_centre_electricity,World,2025,447,,,TWh,estimate,,GARTNER2026,,Press release,human_verified,\nTWM010,data_centre_electricity,World,2026,565,,,TWh,forecast,,GARTNER2026,,Press release,human_verified,+26% year over year\nTWM011,data_centre_electricity,World,2030,1200,,,TWh,forecast,,GARTNER2026,,Press release,human_verified,\"Stated as 'over 1,200 TWh'; Gartner adds that grid supply will be insufficient\"\nTWM012,data_centre_power_demand,World,2025,104,,,GW,estimate,,GARTNER2026,,Press release,human_verified,\nTWM013,data_centre_power_demand,World,2026,132,,,GW,forecast,,GARTNER2026,,Press release,human_verified,\nTWM014,data_centre_power_demand,World,2030,290,,,GW,forecast,,GARTNER2026,,Press release,human_verified,\nTWM015,ai_optimized_server_share_of_dc_consumption,World,2026,31,,,%,forecast,,GARTNER2026,,Press release,human_verified,\nTWM016,ai_optimized_server_electricity,World,2025,95,,,TWh,estimate,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM017,conventional_server_electricity,World,2025,193,,,TWh,estimate,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM018,ai_optimized_server_electricity,World,2026,175,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM019,conventional_server_electricity,World,2026,195,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM020,ai_optimized_server_electricity,World,2027,258,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM021,conventional_server_electricity,World,2027,200,,,TWh,forecast,,GARTNER2026,ITNEWS2026,Figure 1,human_verified,\nTWM022,data_centre_electricity,United States,2014,58,,,TWh,estimate,,LBNL2024,,DOE announcement,human_verified,\nTWM023,data_centre_electricity,United States,2023,176,,,TWh,estimate,,LBNL2024,,DOE announcement,human_verified,4.4% of US electricity\nTWM024,data_centre_electricity,United States,2028,,325,580,TWh,projection,range of scenarios,LBNL2024,,DOE announcement,human_verified,\nTWM025,data_centre_electricity_share,United States,2023,4.4,,,% of electricity consumption,estimate,,LBNL2024,,DOE announcement,human_verified,\nTWM026,data_centre_electricity_share,United States,2028,,6.7,12,% of electricity consumption,projection,range of scenarios,LBNL2024,MITTR2025,Part Four,human_verified,\nTWM027,data_centre_electricity,United States,2024,200,,,TWh,estimate,,LBNL2024,MITTR2025,Part Four,human_verified,'somewhere around 200 TWh'\nTWM028,ai_server_electricity,United States,2024,,53,76,TWh,estimate,,LBNL2024,MITTR2025,Part Four,human_verified,\nTWM029,ai_server_electricity,United States,2028,,165,326,TWh,projection,,LBNL2024,MITTR2025,Part Four,human_verified,\nTWM030,chatgpt_messages_per_day,World,2024-12,1000000000,,,messages/day,company_statement,,MITTR2025,,Part Three,human_verified,OpenAI statement reported by MIT Technology Review\nTWM031,chatgpt_images_per_day,World,2025-03,78000000,,,images/day,company_statement,,MITTR2025,,Part Three,human_verified,After the March 2025 image-generator launch\n","equivalents.csv":"eq_id,label,energy_wh,per,basis,source_id,notes\nTWQ01,Full smartphone charge,22,charge,reference_value,EPA_EQUIV,0.022 kWh as cited in LUCCIONI2024; earlier EPA value 0.012 kWh.\nTWQ02,Average US household electricity,28767,day,derived,EPOCH2025,\"10,500 kWh/yr (EIA, cited by EPOCH2025) / 365.\"\nTWQ03,\"Microwave oven at 1,000 W\",16.667,minute,physics_assumed_power,,\"1,000 W x 1/60 h.\"\nTWQ04,10 W LED bulb,10,hour,physics_assumed_power,,\nTWQ05,Television at ~100 W,1.667,minute,assumption,GOOGLE2025,GOOGLE2025 uses ~100 W for a modern TV (citing EnergySage).\nTWQ06,E-bike,15.53,km,assumption,MITTR2025,25 Wh per mile (MITTR2025 methodology).\nTWQ07,Google web search (2009 figure),0.3,search,reference_value,GOOGLE2009,Historical; cited by EPOCH2025 and DEVRIES2023.\nTWQ08,\"Boiling 1 litre of water (20 to 100 C, no losses)\",93.0,litre,physics,,4.186 kJ/(kg K) x 80 K / 3.6 kJ per Wh.\nTWQ09,Large nuclear reactor (~1 GW electric),1000000000,hour,convention,,Round 1 GW used as the reactor unit.\nTWQ10,Average US household electricity,10500000,year,reference_value,EPOCH2025,\"10,500 kWh/yr (EIA, cited by EPOCH2025).\"\n","parameters.csv":"parameter,value,source_id,notes\nF_ACCELERATOR_TO_FULL,1.72,GOOGLE2025,Production scaling from active-accelerator energy to the comprehensive boundary (Sec. 4.1). Sensitivity: 2.0 (MITTR2025 doubling heuristic).\nPUE_REF,1.13,GOOGLE2025; JEGHAM2025,\"Median of 1.09 (Google fleet, GOOGLE2025), 1.12 (Azure), 1.14 (AWS), 1.27 (DeepSeek, China) as used in JEGHAM2025 Table 1.\"\nWUE_ONSITE_L_PER_KWH,1.15,GOOGLE2025,\"Google fleet WUE Category 2 (2023 and 2024), applied to IT energy (excluding overhead). Used for the app's indicative water figure.\"\nDEFAULT_PRICE_USD_PER_KWH,0.168,EIA2025,\"US residential average, 2025 forecast. Editable default in the app only.\"\nREACTOR_GW,1.0,,Round reactor unit for the '1 billion people' multiplier: average GW = (Wh per person per day) / 24.\n","token_factors.csv":"factor_id,source_id,model,token_type,wh_per_million_tokens,method,verification,notes\nTWT001,COUCH2026,GPT-4o (EPOCH2025 anchor),blended (10k in + ~530 out),240,derived,human_verified,2.5 Wh / 0.01053 MTok\nTWT002,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),input (fresh),390,derived,human_verified,\nTWT003,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),output,1950,derived,human_verified,\nTWT004,COUCH2026,Claude Opus 4.5 (scaled by API price ratios),cache read,39,derived,human_verified,\"Assumed 10% of fresh input, mirroring the price ratio; HAUSFATHER2026 tests 1-25%.\"\nTWT005,CLAUDECARBON2026,Claude 3.7 Sonnet (fit on JEGHAM2025),input (fresh),135,regression,human_verified,1.35e-4 Wh per input token\nTWT006,CLAUDECARBON2026,Claude 3.7 Sonnet (fit on JEGHAM2025),output,2880,regression,human_verified,2.88e-3 Wh per output token\n","boundary_components.csv":"component,meaning,values\nincl_accelerator,Energy of the active AI accelerators (GPU/TPU) while serving the request.,yes / no / unknown\nincl_host,\"Host CPU, DRAM and other server components of the active machine.\",yes / approx / no / unknown\nincl_idle,Idle or reserve capacity provisioned for reliability and latency.,yes / partial / approx / no / unknown\nincl_overhead_pue,\"Data-centre overhead (cooling, power conversion) via PUE.\",yes / approx / no / unknown\nincl_embodied,Embodied impacts of hardware manufacturing (life-cycle).,yes / no / unknown\n"}}</script>
+<script>
+(() => {
+'use strict';
+const $ = (sel, root = document) => root.querySelector(sel);
+const SVGNS = 'http://www.w3.org/2000/svg';
+function h(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? '' : String(v));
+  }
+  for (const c of kids) if (c != null && c !== false) n.append(c);
+  return n;
+}
+function s(tag, attrs) {
+  const n = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const k in attrs) if (attrs[k] != null) n.setAttribute(k, String(attrs[k]));
+  return n;
+}
+
+/* ---------- data ---------- */
+function parseCSV(text) {
+  const rows = []; let row = [], field = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; }
+      else field += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+    else if (c !== '\r') field += c;
+  }
+  if (field !== '' || row.length) { row.push(field); rows.push(row); }
+  const head = rows.shift() || [];
+  return rows.filter(r => r.length > 1 || r[0] !== '').map(r => Object.fromEntries(head.map((k, j) => [k, r[j] === undefined ? '' : r[j]])));
+}
+let RAW = {};
+try { RAW = JSON.parse($('#tokwatt-data').textContent || '{}'); } catch (e) { RAW = {}; }
+const FILES = RAW.files || {};
+const VERSION = RAW.version || '0.1.0';
+const table = name => parseCSV(FILES[name] || '');
+const EST = table('estimates.csv'), SRC = table('sources.csv'), DEFS = table('task_defaults.csv'), TASKS = table('tasks.csv');
+const GRID = table('grid_carbon.csv'), MACRO = table('macro.csv'), EQS = table('equivalents.csv'), PARS = table('parameters.csv');
+const srcById = Object.fromEntries(SRC.map(r => [r.source_id, r]));
+const taskById = Object.fromEntries(TASKS.map(r => [r.task_id, r]));
+const def = Object.fromEntries(DEFS.map(r => [r.task_id, { label: r.label, c: +r.central_wh, lo: +r.low_wh, hi: +r.high_wh, n: +r.n_estimates, ns: +r.n_sources }]));
+const par = Object.fromEntries(PARS.map(r => [r.parameter, +r.value]));
+const PUE = par.PUE_REF || 1.13, WUE = par.WUE_ONSITE_L_PER_KWH || 1.15, FACC = par.F_ACCELERATOR_TO_FULL || 1.72;
+const eqWh = id => { const q = EQS.find(r => r.eq_id === id); return q ? +q.energy_wh : NaN; };
+const macroVal = (ind, region, year) => { const m = MACRO.find(r => r.indicator === ind && r.region === region && r.year === year); return m ? +m.value : NaN; };
+const nSrcEst = new Set(EST.map(e => e.source_id)).size;
+
+/* ---------- formatting ---------- */
+const nf = (v, o) => v.toLocaleString('en-US', o);
+function sig(v, n = 3) {
+  if (!Number.isFinite(v)) return '–';
+  if (v === 0) return '0';
+  const a = Math.abs(v);
+  if (a >= 10 ** n) { const k = Math.floor(Math.log10(a)) - n + 1; return nf(Math.round(v / 10 ** k) * 10 ** k); }
+  const d = Math.min(8, Math.max(0, n - 1 - Math.floor(Math.log10(a))));
+  return nf(Number(v.toFixed(d)), { maximumFractionDigits: d });
+}
+function unitFor(a) { return a >= 1e9 ? [1e9, 'GWh'] : a >= 1e6 ? [1e6, 'MWh'] : a >= 1e4 ? [1e3, 'kWh'] : [1, 'Wh']; }
+function wh(v, n = 3) { const [d, u] = unitFor(Math.abs(v)); return `${sig(v / d, n)} ${u}`; }
+const sigRef = v => sig(v, Math.abs(v) >= 100 ? 3 : 2); /* house style shared with the paper: 2 significant figures below 100, 3 from 100 up */
+function whRef(v) { const [d, u] = unitFor(Math.abs(v)); return `${sigRef(v / d)} ${u}`; }
+function whRange(lo, hi) { const [d, u] = unitFor(Math.abs(hi)); return `${sigRef(lo / d)}–${sigRef(hi / d)} ${u}`; }
+function kwh(v) { const a = Math.abs(v); if (a >= 1e6) return sig(v / 1e6) + ' GWh'; if (a >= 1e3) return sig(v / 1e3) + ' MWh'; if (a > 0 && a < 1) return sig(v * 1e3) + ' Wh'; return sig(v) + ' kWh'; }
+function money(v) { if (v > 0 && v < 0.01) return sig(v, 2); return nf(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function mass(kg) { if (kg >= 1000) return sig(kg / 1000) + ' t'; if (kg > 0 && kg < 1) return sig(kg * 1000) + ' g'; return sig(kg) + ' kg'; }
+function vol(L) { if (L >= 1000) return sig(L / 1000) + ' m³'; if (L > 0 && L < 1) return sig(L * 1000) + ' mL'; return sig(L) + ' L'; }
+function power(gw) { return gw >= 1 ? [sig(gw, 2), 'GW'] : [sig(gw * 1000, 2), 'MW']; }
+function powerRange(lo, hi) { return hi >= 1 ? `${sig(lo, 2)}–${sig(hi, 2)} GW` : `${sig(lo * 1000, 2)}–${sig(hi * 1000, 2)} MW`; }
+function reactors(gw, short) {
+  if (gw <= 0) return short ? 'nothing yet' : 'Nothing counted yet. Add something you did with AI today.';
+  if (gw >= 0.95) { const n = sig(gw, 2); const one = n === '1'; return short ? `≈ ${n} nuclear reactor${one ? '' : 's'}, 24/7` : `≈ ${n} large nuclear reactor${one ? '' : 's'} running day and night`; }
+  return short ? `≈ ${sig(gw * 100, 2)}% of a reactor` : `≈ ${sig(gw * 100, 2)}% of one large nuclear reactor running day and night`;
+}
+const METHOD = { measured: 'measured', measured_gpu_x2_heuristic: 'measured GPU × 2', modeled: 'modeled', disclosed: 'company disclosure', estimated_from_tokens: 'estimated from token logs', lca: 'life-cycle analysis', secondary_report: 'secondary report' };
+const methodLabel = m => METHOD[m] || m;
+
+/* ---------- calculator state ---------- */
+const APP = [
+  { id: 'chat_short', name: 'Chat answers', hint: 'A normal question and answer', short: 'Chat answers', ex: 20 },
+  { id: 'chat_reasoning', name: 'Reasoning answers', hint: 'An answer in a thinking or reasoning mode', short: 'Reasoning', ex: 3 },
+  { id: 'long_document', name: 'Long-document chats', hint: 'A question about a file of about 15 pages', short: 'Long docs', ex: 1 },
+  { id: 'agentic_task', name: 'Agent tasks', hint: 'One request handed to a coding or computer-use agent', short: 'Agent tasks', ex: 1 },
+  { id: 'image_generation', name: 'Images', hint: 'One generated picture', short: 'Images', ex: 2 },
+  { id: 'video_generation', name: 'Short videos', hint: 'One generated clip of about 5 seconds', short: 'Videos', ex: 0 },
+].filter(t => def[t.id]);
+const MAXN = 999, KEY = 'tokwatt:v1';
+const EXAMPLE = Object.fromEntries(APP.map(t => [t.id, t.ex]));
+const state = { counts: { ...EXAMPLE }, grid: 'World', cur: 'USD', price: par.DEFAULT_PRICE_USD_PER_KWH || 0.168, touched: false };
+try {
+  const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (saved && typeof saved === 'object') {
+    for (const t of APP) { const v = saved.counts && saved.counts[t.id]; if (Number.isFinite(v) && v >= 0 && v <= MAXN) state.counts[t.id] = Math.round(v); }
+    if (typeof saved.grid === 'string' && GRID.some(g => g.region === saved.grid)) state.grid = saved.grid;
+    if (typeof saved.cur === 'string' && /^[A-Z]{1,4}$/.test(saved.cur)) state.cur = saved.cur;
+    if (Number.isFinite(saved.price) && saved.price >= 0 && saved.price < 1000) state.price = saved.price;
+    state.touched = !!saved.touched;
+  }
+} catch (e) { /* storage unavailable */ }
+function persist() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+const gridRow = () => GRID.find(g => g.region === state.grid) || GRID.find(g => g.region === 'World') || GRID[0] || { region: 'World', carbon_intensity_gco2e_per_kwh: '0', year: '' };
+
+function compute() {
+  const items = APP.map(t => { const n = state.counts[t.id] || 0, d = def[t.id]; return { ...t, n, unit: d.c, c: n * d.c, lo: n * d.lo, hi: n * d.hi }; });
+  const sum = k => items.reduce((a, i) => a + i[k], 0);
+  const c = sum('c'), lo = sum('lo'), hi = sum('hi');
+  const g = gridRow(), ci = +g.carbon_intensity_gco2e_per_kwh;
+  const yr = c * 365 / 1000;
+  return { items, c, lo, hi, yr, g, ci, cost: yr * state.price, co2: yr * ci / 1000, water: c / PUE * WUE * 365 / 1000, gw: c / 24, gwLo: lo / 24, gwHi: hi / 24, twh: c * 0.365 };
+}
+
+/* ---------- static bindings ---------- */
+const binds = { version: 'v' + VERSION, nest: String(EST.length), nsrc: String(nSrcEst), wue: sig(WUE, 3), facc: sig(FACC, 3), pue: sig(PUE, 3) };
+document.querySelectorAll('[data-bind]').forEach(n => { const v = binds[n.dataset.bind]; if (v) n.textContent = v; });
+(function context() {
+  const iea = macroVal('data_centre_electricity', 'World', '2024'), g26 = macroVal('data_centre_electricity', 'World', '2026'), ai = macroVal('ai_optimized_server_share_of_dc_consumption', 'World', '2026');
+  const p = $('#context'); if (!Number.isFinite(iea) || !Number.isFinite(g26)) return;
+  const link = (id, label) => { const sr = srcById[id]; return sr ? h('a', { href: sr.url, target: '_blank', rel: 'noopener', text: label }) : label; };
+  p.append(`Data centres used ${nf(iea)} TWh of electricity in 2024 (`, link('IEA2025', 'IEA'), `) and are forecast to use ${nf(g26)} TWh in 2026, ${sig(ai, 2)}% of it in AI-optimized servers (`, link('GARTNER2026', 'Gartner'), '). Gartner expects grid supply to fall short of new data-centre demand.');
+})();
+
+/* ---------- meter ---------- */
+const inputs = {};
+const tasksEl = $('#tasks');
+for (const t of APP) {
+  const d = def[t.id];
+  const inp = h('input', { id: 'n-' + t.id, type: 'number', inputmode: 'numeric', min: 0, max: MAXN, step: 1, value: state.counts[t.id], 'aria-label': `${t.name} per day` });
+  inputs[t.id] = inp;
+  const ev = h('div', { class: 'task-ev' },
+    h('span', { text: `${sigRef(d.c)} Wh each` }),
+    h('span', { text: `range ${sigRef(d.lo)}–${sigRef(d.hi)}` }),
+    h('span', { text: `${d.n} estimate${d.n === 1 ? '' : 's'} · ${d.ns} source${d.ns === 1 ? '' : 's'}` }),
+    d.ns === 1 ? h('span', { class: 'single', text: 'Single source' }) : null);
+  tasksEl.append(h('li', { class: 'task' },
+    h('div', { class: 'task-info' }, h('div', { class: 'task-name', text: t.name }), h('div', { class: 'task-hint', text: t.hint })),
+    h('div', { class: 'stepper' },
+      h('button', { type: 'button', 'aria-label': `One fewer: ${t.name}`, text: '−', onclick: () => setCount(t.id, (state.counts[t.id] || 0) - 1, true) }),
+      inp,
+      h('button', { type: 'button', 'aria-label': `One more: ${t.name}`, text: '+', onclick: () => setCount(t.id, (state.counts[t.id] || 0) + 1, true) })),
+    ev));
+  inp.addEventListener('input', () => { if (inp.value === '') return; const v = Math.round(+inp.value); if (Number.isFinite(v)) setCount(t.id, v, false); });
+  inp.addEventListener('change', () => setCount(t.id, Math.round(+inp.value) || 0, true));
+}
+function setCount(id, v, writeBack) {
+  v = Math.max(0, Math.min(MAXN, Math.round(v) || 0));
+  state.counts[id] = v; state.touched = true;
+  if (writeBack || +inputs[id].value !== v) inputs[id].value = String(v);
+  update();
+}
+$('#reset').addEventListener('click', () => {
+  Object.assign(state.counts, EXAMPLE); state.touched = false;
+  for (const t of APP) inputs[t.id].value = String(state.counts[t.id]);
+  update();
+});
+
+const gridSel = $('#grid');
+const byName = (a, b) => a.region.localeCompare(b.region);
+const gridOpt = g => h('option', { value: g.region, text: `${g.region} · ${sig(+g.carbon_intensity_gco2e_per_kwh, 3)} g/kWh` });
+gridSel.append(...GRID.filter(g => g.region === 'World').map(gridOpt),
+  h('optgroup', { label: 'Regions' }, ...GRID.filter(g => !g.iso_code && g.region !== 'World').sort(byName).map(gridOpt)),
+  h('optgroup', { label: 'Countries' }, ...GRID.filter(g => g.iso_code).sort(byName).map(gridOpt)));
+gridSel.value = gridRow().region;
+gridSel.addEventListener('change', () => { state.grid = gridSel.value; update(); });
+
+const curIn = $('#cur'), priceIn = $('#price');
+curIn.value = state.cur; priceIn.value = String(state.price);
+curIn.addEventListener('input', () => { state.cur = curIn.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 4) || 'USD'; update(); });
+curIn.addEventListener('change', () => { curIn.value = state.cur; });
+priceIn.addEventListener('input', () => { const v = +priceIn.value; if (priceIn.value !== '' && Number.isFinite(v) && v >= 0) { state.price = v; update(); } });
+
+const drumsEl = $('#drums'), drums = [];
+for (let i = 0; i < 5; i++) {
+  if (i === 4) drumsEl.append(h('span', { class: 'dp', text: '.' }));
+  const strip = h('span', { class: 'strip' });
+  for (let d = 0; d < 10; d++) strip.append(h('span', { text: String(d) }));
+  const dr = h('span', { class: 'drum' + (i === 4 ? ' dec' : '') }, strip);
+  drumsEl.append(dr); drums.push({ dr, strip });
+}
+function setCounter(whDay) {
+  let v = whDay, unit = 'Wh';
+  if (v >= 9999.95) { v /= 1000; unit = 'kWh'; }
+  if (v >= 9999.95) v = 9999.9;
+  const digits = String(Math.round(v * 10)).padStart(5, '0').slice(-5).split('').map(Number);
+  let lead = true;
+  digits.forEach((d, i) => {
+    if (d !== 0 || i >= 3) lead = false;
+    drums[i].dr.classList.toggle('lead', lead);
+    drums[i].strip.style.transform = `translateY(${-d * 1.24}em)`;
+  });
+  $('#counter-unit').textContent = unit;
+}
+
+/* ---------- receipt ---------- */
+function shortGrid(g) { const n = g.region === 'European Union (27)' ? 'EU-27' : g.region; return n.length > 15 ? (g.iso_code || n.slice(0, 14) + '…') : n; }
+function barcode(code) {
+  let x = 2166136261 >>> 0;
+  for (const ch of code) { x ^= ch.charCodeAt(0); x = Math.imul(x, 16777619) >>> 0; }
+  const bars = [[0, 1]]; let pos = 3;
+  for (let i = 0; i < 44; i++) { x = Math.imul(x ^ (x >>> 13), 1274126177) >>> 0; const w = 1 + (x % 3); bars.push([pos, w]); pos += w + 1 + ((x >>> 9) % 2); }
+  bars.push([pos + 1, 1]);
+  return { bars, width: pos + 2 };
+}
+function receiptModel(r) {
+  const date = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).replace(',', '');
+  const L = [{ t: 'title', text: 'TOKWATT' }, { t: 'sub', text: 'AI energy receipt' }];
+  if (!state.touched) L.push({ t: 'flag', text: 'Example day' });
+  L.push({ t: 'meta', l: date, r: 'Data v' + VERSION }, { t: 'rule' });
+  for (const i of r.items) L.push({ t: 'item', l: i.short, m: `${i.n} × ${sig(i.unit, 3)}`, r: wh(i.c), zero: i.n === 0 });
+  L.push({ t: 'rule' }, { t: 'total', l: 'Total per day', r: wh(r.c) }, { t: 'kv', l: 'Plausible range', r: r.c > 0 ? whRange(r.lo, r.hi) : '–' }, { t: 'rule' });
+  L.push({ t: 'head', text: 'Per year' },
+    { t: 'kv', in: true, l: 'Electricity', r: kwh(r.yr) },
+    { t: 'kv', in: true, l: `Cost at ${state.cur} ${sig(state.price, 3)}/kWh`, r: `${state.cur} ${money(r.cost)}` },
+    { t: 'kv', in: true, l: `CO2e, ${shortGrid(r.g)} grid`, r: mass(r.co2) },
+    { t: 'kv', in: true, l: 'Cooling water', r: vol(r.water) },
+    { t: 'rule' });
+  L.push({ t: 'eq', text: `= ${sig(r.c / eqWh('TWQ01'), 2)} phone charges a day` },
+    { t: 'eq', text: `= ${sig(r.c / eqWh('TWQ04'), 2)} hours of a 10 W LED bulb` },
+    { t: 'eq', text: `= ${sig(100 * r.c / eqWh('TWQ02'), 2)}% of a US home's daily use` },
+    { t: 'rule' });
+  const [pn, pu] = power(r.gw);
+  L.push({ t: 'big', l: 'If 1 billion people', r: `${pn} ${pu}` }, { t: 'note', text: reactors(r.gw, true) }, { t: 'rule' });
+  L.push({ t: 'foot', text: `${EST.length} published estimates · ${nSrcEst} sources` }, { t: 'code', code: `TW${Math.round(r.c * 10)}${r.g.iso_code || 'WLD'}` });
+  return L;
+}
+function renderReceipt(L) {
+  const frag = document.createDocumentFragment();
+  const row = (cls, l, r) => h('div', { class: cls }, h('span', { class: 'l', text: l }), h('span', { class: 'r', text: r }));
+  for (const l of L) {
+    if (l.t === 'title') frag.append(h('div', { class: 'r-title', text: l.text }));
+    else if (l.t === 'sub') frag.append(h('div', { class: 'r-sub', text: l.text }));
+    else if (l.t === 'flag') frag.append(h('div', { class: 'r-flag' }, h('span', { text: l.text })));
+    else if (l.t === 'meta') frag.append(h('div', { class: 'r-meta' }, h('span', { text: l.l }), h('span', { text: l.r })));
+    else if (l.t === 'rule') frag.append(h('div', { class: 'r-rule' }));
+    else if (l.t === 'item') frag.append(h('div', { class: 'r-item' + (l.zero ? ' zero' : '') }, h('span', { class: 'l', text: l.l }), h('span', { class: 'm', text: l.m }), h('span', { class: 'r', text: l.r })));
+    else if (l.t === 'head') frag.append(h('div', { class: 'r-head', text: l.text }));
+    else if (l.t === 'total') frag.append(row('r-total', l.l, l.r));
+    else if (l.t === 'kv') frag.append(row('r-kv' + (l.in ? ' in' : ''), l.l, l.r));
+    else if (l.t === 'big') frag.append(row('r-big', l.l, l.r));
+    else if (l.t === 'eq' || l.t === 'note') frag.append(h('div', { class: 'r-' + l.t, text: l.text }));
+    else if (l.t === 'foot') frag.append(h('div', { class: 'r-foot', text: l.text }));
+    else if (l.t === 'code') {
+      const b = barcode(l.code);
+      const svg = s('svg', { class: 'r-code', viewBox: `0 0 ${b.width} 30`, preserveAspectRatio: 'none', 'aria-hidden': 'true' });
+      for (const [x, w] of b.bars) svg.append(s('rect', { x, y: 0, width: w, height: 30, fill: 'currentColor' }));
+      frag.append(svg);
+    }
+  }
+  $('#receipt').replaceChildren(frag);
+}
+
+async function receiptBlob(L) {
+  try { await Promise.all(['400 25px "IBM Plex Mono"', '600 32px "IBM Plex Mono"', '900 54px Archivo'].map(f => document.fonts.load(f))); } catch (e) { /* fall back to system fonts */ }
+  const W = 1080, Z = 14, PW = 784, PX = (W - PW) / 2, IN = 56, TOP = 90;
+  const HT = { title: 74, sub: 38, flag: 50, meta: 54, rule: 30, item: 42, head: 44, total: 56, kv: 42, eq: 42, big: 46, note: 42, foot: 40, code: 96 };
+  const paperH = IN * 2 + L.reduce((a, l) => a + (HT[l.t] || 42), 0);
+  const H = TOP + paperH + 120;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const g = cv.getContext('2d');
+  const C = { ground: '#E9ECE9', paper: '#FFFFFF', ink: '#15191B', ink2: '#464E52', ink3: '#6B7377', rule: '#8E969A' };
+  const MONO = '"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace', DISP = 'Archivo, "Arial Black", Arial, sans-serif';
+  g.fillStyle = C.ground; g.fillRect(0, 0, W, H);
+  const y0 = TOP, y1 = TOP + paperH;
+  g.save(); g.shadowColor = 'rgba(21,25,27,0.18)'; g.shadowBlur = 36; g.shadowOffsetY = 14;
+  g.beginPath(); g.moveTo(PX, y0 + Z / 2);
+  for (let x = PX; x < PX + PW - 0.5; x += Z) { g.lineTo(x + Z / 2, y0); g.lineTo(x + Z, y0 + Z / 2); }
+  g.lineTo(PX + PW, y1 - Z / 2);
+  for (let x = PX + PW; x > PX + 0.5; x -= Z) { g.lineTo(x - Z / 2, y1); g.lineTo(x - Z, y1 - Z / 2); }
+  g.closePath(); g.fillStyle = C.paper; g.fill(); g.restore();
+  const L0 = PX + IN, R0 = PX + PW - IN, MID = R0 - 196;
+  const font = (w, px, fam = MONO) => { g.font = `${w} ${px}px ${fam}`; };
+  const text = (str, x, y, align = 'left', color = C.ink) => { g.textAlign = align; g.fillStyle = color; g.fillText(str, x, y); };
+  const fit = (str, max) => { if (g.measureText(str).width <= max) return str; while (str.length > 1 && g.measureText(str + '…').width > max) str = str.slice(0, -1); return str + '…'; };
+  const spacing = v => { if ('letterSpacing' in g) g.letterSpacing = v; };
+  g.textBaseline = 'alphabetic';
+  let y = y0 + IN;
+  for (const l of L) {
+    const hh = HT[l.t] || 42, base = y + Math.round(hh * 0.68);
+    if (l.t === 'title') { font(900, 54, DISP); if ('fontStretch' in g) g.fontStretch = 'expanded'; text(l.text, W / 2, y + 56, 'center'); if ('fontStretch' in g) g.fontStretch = 'normal'; }
+    else if (l.t === 'sub') { font(500, 20); spacing('5px'); text(l.text.toUpperCase(), W / 2, base, 'center', C.ink2); spacing('0px'); }
+    else if (l.t === 'flag') { font(600, 18); spacing('4px'); const tw = g.measureText(l.text.toUpperCase()).width + 28; g.strokeStyle = C.ink; g.lineWidth = 2.5; g.strokeRect(W / 2 - tw / 2, y + 12, tw, 30); text(l.text.toUpperCase(), W / 2 + 2, y + 34, 'center'); spacing('0px'); }
+    else if (l.t === 'meta') { font(400, 20); text(l.l.toUpperCase(), L0, base, 'left', C.ink3); text(l.r, R0, base, 'right', C.ink3); }
+    else if (l.t === 'rule') { g.save(); g.strokeStyle = C.rule; g.lineWidth = 2; g.setLineDash([9, 7]); g.beginPath(); g.moveTo(L0, y + hh / 2); g.lineTo(R0, y + hh / 2); g.stroke(); g.restore(); }
+    else if (l.t === 'item') { font(400, 25); const col = l.zero ? C.ink3 : C.ink; text(fit(l.l.toUpperCase(), MID - 150 - L0), L0, base, 'left', col); text(l.m, MID, base, 'right', C.ink3); text(l.r, R0, base, 'right', col); }
+    else if (l.t === 'head') { font(600, 23); text(l.text.toUpperCase(), L0, base, 'left', C.ink2); }
+    else if (l.t === 'total') { font(600, 31); text(l.l.toUpperCase(), L0, base); text(l.r, R0, base, 'right'); }
+    else if (l.t === 'kv') { font(400, 23); const rv = l.r; const rw = g.measureText(rv).width; text(fit(l.l, R0 - L0 - rw - 40 - (l.in ? 24 : 0)), L0 + (l.in ? 24 : 0), base, 'left', C.ink2); text(rv, R0, base, 'right'); }
+    else if (l.t === 'eq' || l.t === 'note') { font(400, 23); text(fit(l.text, R0 - L0), L0, base, 'left', C.ink2); }
+    else if (l.t === 'big') { font(600, 25); text(l.l.toUpperCase(), L0, base); text(l.r, R0, base, 'right'); }
+    else if (l.t === 'foot') { font(400, 18); spacing('2px'); text(l.text.toUpperCase(), W / 2, base, 'center', C.ink3); spacing('0px'); }
+    else if (l.t === 'code') { const b = barcode(l.code), bw = (R0 - L0) * 0.72, sx = bw / b.width, bx = W / 2 - bw / 2; g.fillStyle = C.ink; for (const [x, w] of b.bars) g.fillRect(bx + x * sx, y + 16, Math.max(1, w * sx), 58); }
+    y += hh;
+  }
+  font(600, 22, DISP); text('TokWatt · open data on the energy of AI tasks', W / 2, y1 + 66, 'center', C.ink2);
+  return new Promise(res => cv.toBlob(res, 'image/png'));
+}
+function summary(r) {
+  const [pn, pu] = power(r.gw);
+  return `My AI day: ${wh(r.c)} of electricity (plausible range ${whRange(r.lo, r.hi)}). If 1 billion people used AI like this: ${pn} ${pu}, ${reactors(r.gw, true)}. Estimated with TokWatt v${VERSION}, built on ${EST.length} published estimates.`;
+}
+
+/* ---------- billion band ---------- */
+function renderBillion(r) {
+  const [pn, pu] = power(r.gw);
+  $('#bil-num').textContent = r.c > 0 ? pn : '0';
+  $('#bil-unit').textContent = pu;
+  $('#bil-lead').textContent = reactors(r.gw, false);
+  $('#bil-range').textContent = r.c > 0 ? `Range ${powerRange(r.gwLo, r.gwHi)}, average draw` : '';
+  const cap = 120, hiN = Math.ceil(r.gwHi - 1e-9), shown = Math.min(hiN, cap);
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < shown; i++) {
+    const fill = Math.max(0, Math.min(1, r.gw - i));
+    const u = h('span', { class: 'u' + (fill >= 0.995 ? ' full' : fill > 0.02 ? ' part' : '') });
+    if (fill > 0.02 && fill < 0.995) u.style.setProperty('--p', Math.round(fill * 100) + '%');
+    frag.append(u);
+  }
+  if (hiN > cap) frag.append(h('span', { class: 'more', text: `+${nf(hiN - cap)} more` }));
+  $('#units').replaceChildren(frag);
+  const ctx = $('#bil-context'); ctx.replaceChildren();
+  const dc = macroVal('data_centre_electricity', 'World', '2026'), sr = srcById.GARTNER2026;
+  if (r.c > 0 && Number.isFinite(dc)) {
+    const pct = 100 * r.twh / dc;
+    ctx.append(`That is ${sig(r.twh, 2)} TWh a year, ${pct >= 100 ? 'more than all' : sig(pct, 2) + '% of all'} the electricity the world's data centres are forecast to use in 2026 (${nf(dc)} TWh, `,
+      sr ? h('a', { href: sr.url, target: '_blank', rel: 'noopener', text: 'Gartner' }) : 'Gartner', ').');
+  }
+}
+
+/* ---------- energy ladder ---------- */
+const LAD = DEFS.map(d => ({ id: d.task_id, label: d.label, c: +d.central_wh, lo: +d.low_wh, hi: +d.high_wh, n: +d.n_estimates, ns: +d.n_sources })).sort((a, b) => a.c - b.c);
+const estByTask = {};
+for (const e of EST) { const v = parseFloat(e.energy_wh_harmonized); if (v > 0) (estByTask[e.task] = estByTask[e.task] || []).push({ v, e }); }
+const chart = $('#chart'), tip = $('#tip');
+let lad = null;
+(function ladLede() {
+  if (!LAD.length) return;
+  const lo = LAD[0], hi = LAD[LAD.length - 1], oom = Math.round(Math.log10(hi.c / lo.c));
+  const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
+  $('#lad-lede').textContent = `Energy per task spans about ${words[oom] || oom} orders of magnitude, from ${lo.label.toLowerCase()} (${whRef(lo.c)}) to ${hi.label.toLowerCase()} (${whRef(hi.c)}). The range inside a single task is often as wide as the gap between tasks.`;
+})();
+function drawLadder(total) {
+  const W = Math.max(300, Math.round(chart.clientWidth || 0));
+  const narrow = W < 640;
+  const labelW = narrow ? 0 : Math.min(250, Math.round(W * 0.28));
+  const x0 = narrow ? 6 : labelW + 18, x1 = W - 72;
+  const top = 34, rowH = narrow ? 52 : 34, axisH = 34, H = top + LAD.length * rowH + axisH;
+  const LMIN = -3, LMAX = 4;
+  const X = v => x0 + (Math.log10(Math.max(v, 10 ** LMIN)) - LMIN) / (LMAX - LMIN) * (x1 - x0);
+  const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'group', 'aria-label': 'Energy per task, logarithmic scale' });
+  const TICK = { '-3': '0.001', '-2': '0.01', '-1': '0.1', '0': '1 Wh', '1': '10', '2': '100', '3': '1 kWh', '4': '10 kWh' };
+  for (let e = LMIN; e <= LMAX; e++) {
+    const x = X(10 ** e);
+    svg.append(s('line', { class: 'gl', x1: x, x2: x, y1: top - 8, y2: H - axisH + 4 }));
+    const t = s('text', { class: 'ax', x, y: H - axisH + 22, 'text-anchor': e === LMIN && narrow ? 'start' : 'middle' }); t.textContent = TICK[e]; svg.append(t);
+  }
+  const rows = [];
+  LAD.forEach((r, i) => {
+    const yTop = top + i * rowH, yMid = narrow ? yTop + 35 : yTop + rowH / 2;
+    const gEl = s('g', { class: 'row', tabindex: 0, 'aria-label': `${r.label}: ${sig(r.c, 2)} watt-hours, range ${sig(r.lo, 2)} to ${sig(r.hi, 2)}, ${r.n} estimates from ${r.ns} sources` });
+    gEl.append(s('rect', { class: 'row-hit', x: 1, y: yTop + 1, width: W - 2, height: rowH - 2, rx: 3 }));
+    const lb = s('text', { class: 'lbl', x: narrow ? x0 : labelW, y: narrow ? yTop + 17 : yMid + 4.5, 'text-anchor': narrow ? 'start' : 'end' }); lb.textContent = r.label; gEl.append(lb);
+    const xa = X(r.lo), xb = X(r.hi);
+    gEl.append(s('rect', { class: 'rng', x: xa - 4, y: yMid - 4, width: Math.max(8, xb - xa + 8), height: 8, rx: 4 }));
+    const marks = [];
+    for (const { v, e } of (estByTask[r.id] || [])) { const x = X(v); gEl.append(s('circle', { class: 'est', cx: x, cy: yMid, r: 4 })); marks.push({ x, kind: 'est', v, e }); }
+    const xc = X(r.c); gEl.append(s('circle', { class: 'ref', cx: xc, cy: yMid, r: 6 })); const refMark = { x: xc, kind: 'ref' }; marks.push(refMark);
+    const xEnd = Math.max(xb + 4, ...marks.map(m => m.x + (m.kind === 'ref' ? 8 : 6)));
+    const vt = s('text', { class: 'val', x: xEnd + 8, y: yMid + 4 }); vt.textContent = wh(r.c, 3); gEl.append(vt);
+    gEl.addEventListener('focus', () => showTip(refMark, r, yMid));
+    gEl.addEventListener('blur', hideTip);
+    svg.append(gEl);
+    rows.push({ r, yMid, marks, refMark });
+  });
+  if (total > 0) {
+    const x = X(Math.min(total, 10 ** LMAX));
+    svg.append(s('line', { class: 'you', x1: x, x2: x, y1: top - 12, y2: H - axisH + 4 }));
+    const t = s('text', { class: 'you-lbl', x, y: top - 18, 'text-anchor': x > W - 130 ? 'end' : x < 130 ? 'start' : 'middle' }); t.textContent = `Your day: ${wh(total)}`; svg.append(t);
+  }
+  svg.addEventListener('pointermove', ev => {
+    const b = svg.getBoundingClientRect(), mx = (ev.clientX - b.left) * W / b.width, my = (ev.clientY - b.top) * H / b.height;
+    const row = rows[Math.floor((my - top) / rowH)];
+    if (!row) return hideTip();
+    let best = null, bd = Infinity;
+    for (const m of row.marks) { const d = Math.abs(m.x - mx); if (d < bd || (d === bd && m.kind === 'ref')) { bd = d; best = m; } }
+    if (best && bd <= 14) showTip(best, row.r, row.yMid);
+    else if (mx >= X(row.r.lo) - 8 && mx <= X(row.r.hi) + 8) showTip(row.refMark, row.r, row.yMid, mx);
+    else hideTip();
+  });
+  svg.addEventListener('pointerleave', hideTip);
+  chart.replaceChildren(svg, tip);
+  lad = { W, svg };
+}
+function showTip(m, r, yMid, atX) {
+  tip.replaceChildren();
+  if (m.kind === 'ref') {
+    tip.append(h('div', { class: 'v', text: wh(r.c, 3) }), h('div', { text: r.label }), h('div', { class: 'k', text: `Range ${whRange(r.lo, r.hi)} · ${r.n} estimate${r.n === 1 ? '' : 's'}, ${r.ns} source${r.ns === 1 ? '' : 's'}` }));
+  } else {
+    const e = m.e, sr = srcById[e.source_id], f = e.harmonization_factor;
+    tip.append(h('div', { class: 'v', text: wh(m.v, 3) }), h('div', { text: e.model }), h('div', { class: 'k', text: `${sr ? sr.short_name : e.source_id} · ${methodLabel(e.method)}${f && f !== '1' ? ` · × ${f} to the common boundary` : ''}` }));
+  }
+  tip.hidden = false;
+  const scale = lad.svg.getBoundingClientRect().width / lad.W;
+  const px = (atX != null ? atX : m.x) * scale, py = yMid * scale;
+  const tw = tip.offsetWidth, th = tip.offsetHeight, cw = chart.clientWidth;
+  tip.style.left = Math.max(0, Math.min(px - tw / 2, cw - tw)) + 'px';
+  tip.style.top = (py - th - 14 >= 0 ? py - th - 14 : py + 16) + 'px';
+}
+function hideTip() { tip.hidden = true; }
+const refBody = $('#ref-table tbody');
+for (const r of LAD) refBody.append(h('tr', null, h('td', { text: r.label }), h('td', { class: 'n', text: sig(r.c, 3) }), h('td', { class: 'n', text: `${sig(r.lo, 2)}–${sig(r.hi, 2)}` }), h('td', { class: 'n', text: String(r.n) }), h('td', { class: 'n', text: String(r.ns) })));
+
+/* ---------- evidence table ---------- */
+const fTask = $('#f-task'), fRef = $('#f-ref'), fQ = $('#f-q'), evBody = $('#ev-table tbody');
+const order = Object.fromEntries(LAD.map((r, i) => [r.id, i]));
+const rank = id => (order[id] === undefined ? 99 : order[id]);
+const taskLabel = id => (taskById[id] || {}).label || id;
+fTask.append(h('option', { value: '', text: `All tasks (${EST.length})` }));
+for (const t of [...TASKS].sort((a, b) => rank(a.task_id) - rank(b.task_id))) {
+  const n = EST.filter(e => e.task === t.task_id).length;
+  if (n) fTask.append(h('option', { value: t.task_id, text: `${t.label} (${n})` }));
+}
+const BOUND = [['incl_accelerator', 'Accelerators'], ['incl_host', 'Host server'], ['incl_idle', 'Idle capacity'], ['incl_overhead_pue', 'Facility overhead'], ['incl_embodied', 'Hardware manufacturing']];
+const WORD = { yes: 'counted', approx: 'approximated', partial: 'partly counted', no: 'not counted', unknown: 'not stated' };
+function pills(e) {
+  const words = [], wrap = h('span', { class: 'bp', role: 'img' });
+  for (const [k, name] of BOUND) {
+    const v = e[k], cls = v === 'yes' ? 'y' : (v === 'approx' || v === 'partial') ? 'a' : v === 'unknown' ? 'u' : 'n';
+    wrap.append(h('i', { class: cls, title: `${name}: ${WORD[v] || v}` }));
+    words.push(`${name} ${WORD[v] || v}`);
+  }
+  wrap.setAttribute('aria-label', words.join('; '));
+  return wrap;
+}
+function details(e, sr) {
+  const dl = h('dl', { class: 'det' });
+  const add = (k, v) => { if (v) dl.append(h('dt', { text: k }), h('dd', { text: v })); };
+  const interval = [e.energy_wh_low && `low ${e.energy_wh_low}`, e.energy_wh_high && `high ${e.energy_wh_high}`, e.energy_wh_sd && `SD ${e.energy_wh_sd}`].filter(Boolean).join(', ');
+  add('Functional unit', e.functional_unit);
+  add('As published', `${e.reported_value} ${e.reported_unit}`.trim());
+  add('Interval', e.interval_type && e.interval_type !== 'none' ? `${e.interval_type}${interval ? ': ' + interval + ' Wh' : ''}` : '');
+  add('Harmonization', e.harmonization_factor ? `× ${e.harmonization_factor}` : 'none (no energy value)');
+  add('Tokens', e.tokens_in || e.tokens_out ? `${e.tokens_in || '–'} in, ${e.tokens_out || '–'} out` : '');
+  add('Output', e.output_spec);
+  add('Hardware', e.hardware);
+  add('CO₂e', e.co2e_g ? `${e.co2e_g} g (${e.co2e_basis})` : '');
+  add('Water', e.water_ml ? `${e.water_ml} mL (${e.water_scope})` : '');
+  add('Data period', e.data_period);
+  add('Where in the source', e.locator);
+  add('Taken from', e.reported_in ? ((srcById[e.reported_in] || {}).short_name || e.reported_in) : '');
+  add('Notes', e.notes);
+  add('Source', [sr.title, sr.venue, sr.doi ? 'doi:' + sr.doi : ''].filter(Boolean).join(' · '));
+  add('ID', e.estimate_id);
+  return dl;
+}
+function renderEvidence() {
+  const task = fTask.value, refOnly = fRef.checked, q = fQ.value.trim().toLowerCase();
+  const rows = EST.filter(e => (!task || e.task === task) && (!refOnly || e.in_reference_set === 'TRUE') &&
+      (!q || `${e.model} ${e.provider} ${e.host} ${(srcById[e.source_id] || {}).short_name} ${e.functional_unit}`.toLowerCase().includes(q)))
+    .sort((a, b) => (rank(a.task) - rank(b.task)) || ((parseFloat(a.energy_wh_harmonized) || 0) - (parseFloat(b.energy_wh_harmonized) || 0)));
+  const frag = document.createDocumentFragment();
+  for (const e of rows) {
+    const sr = srcById[e.source_id] || {}, v = parseFloat(e.energy_wh_harmonized);
+    const btn = h('button', { class: 'exp', type: 'button', 'aria-expanded': 'false', 'aria-label': `Details: ${e.model}`, text: '›' });
+    const tr = h('tr', { class: 'ev-row' },
+      h('td', null, btn),
+      h('td', { class: 'sys' }, h('b', { text: e.model }), h('span', { text: [e.host, e.hardware].filter(Boolean).join(' · ') })),
+      h('td', { text: taskLabel(e.task) }),
+      h('td', null, sr.url ? h('a', { href: sr.url, target: '_blank', rel: 'noopener', text: sr.short_name || e.source_id }) : (sr.short_name || e.source_id)),
+      h('td', { text: methodLabel(e.method) }),
+      h('td', null, pills(e)),
+      h('td', { class: 'n', text: Number.isFinite(v) ? sig(v, 3) : '–' }),
+      h('td', null, e.in_reference_set === 'TRUE' ? h('span', { class: 'refpill', title: 'In the reference set for this task', text: 'Ref' }) : null));
+    const det = h('tr', { class: 'ev-detail', hidden: true }, h('td', { colspan: 8 }, details(e, sr)));
+    const toggle = () => { const open = det.hidden; det.hidden = !open; btn.setAttribute('aria-expanded', String(open)); };
+    btn.addEventListener('click', ev => { ev.stopPropagation(); toggle(); });
+    tr.addEventListener('click', ev => { if (!ev.target.closest('a')) toggle(); });
+    frag.append(tr, det);
+  }
+  evBody.replaceChildren(frag);
+  $('#f-count').textContent = `${rows.length} of ${EST.length} estimates`;
+}
+fTask.addEventListener('change', renderEvidence);
+fRef.addEventListener('change', renderEvidence);
+fQ.addEventListener('input', renderEvidence);
+renderEvidence();
+
+/* ---------- files, citation, sources ---------- */
+const FILE_DESC = {
+  'estimates.csv': 'One row per published estimate', 'sources.csv': 'Bibliographic record for every source', 'task_defaults.csv': 'Reference value and range per task',
+  'tasks.csv': 'Task definitions and reference-set rules', 'grid_carbon.csv': 'Carbon intensity of electricity by country', 'macro.csv': 'Data-centre electricity indicators',
+  'token_factors.csv': 'Energy per million tokens', 'equivalents.csv': 'Everyday reference energies', 'parameters.csv': 'Harmonization parameters', 'boundary_components.csv': 'Boundary vocabulary',
+};
+const filesEl = $('#files');
+for (const name of Object.keys(FILE_DESC)) {
+  if (!FILES[name]) continue;
+  const n = parseCSV(FILES[name]).length;
+  filesEl.append(h('li', null,
+    h('div', null, h('div', { class: 'fn', text: name }), h('div', { class: 'fd', text: `${FILE_DESC[name]} · ${nf(n)} rows` })),
+    h('button', { class: 'btn sm', type: 'button', 'data-save': '', hidden: true, text: 'Download', onclick: () => saveFile(name, FILES[name], $('#dl-status')) })));
+}
+const citeText = `Bahi, A. (2026). TokWatt: an open, boundary-annotated database of AI inference energy (Version ${VERSION}) [Data set].`;
+const bib = `@misc{tokwatt_2026,\n  author  = {Bahi, Abderaouf},\n  title   = {TokWatt: an open, boundary-annotated database of AI inference energy},\n  year    = {2026},\n  version = {${VERSION}},\n  note    = {Data set}\n}`;
+$('#cite-text').textContent = citeText;
+$('#bibtex').textContent = bib;
+const srcList = $('#src-list');
+for (const sr of [...SRC].sort((a, b) => a.short_name.localeCompare(b.short_name))) {
+  srcList.append(h('li', null, h('b', { text: sr.short_name + '. ' }), `${sr.title}. ${sr.venue}. `, h('a', { href: sr.url, target: '_blank', rel: 'noopener', text: sr.doi ? 'doi:' + sr.doi : 'Link' })));
+}
+
+/* ---------- saving and copying ---------- */
+let saver = null;
+function anchorSave(filename, data) {
+  const blob = data instanceof Blob ? data : new Blob([data], { type: filename.endsWith('.csv') ? 'text/csv;charset=utf-8' : 'application/octet-stream' });
+  const url = URL.createObjectURL(blob), a = h('a', { href: url, download: filename });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  return Promise.resolve({ status: 'saved' });
+}
+function enableSaves() { document.querySelectorAll('[data-save]').forEach(b => { b.hidden = false; }); }
+function noSaves() { $('#dl-note').textContent = 'UTF-8 CSV. Data under CC BY 4.0. Saving files is not available in this view.'; }
+if (!(window.claude && typeof window.claude.use === 'function')) { saver = anchorSave; enableSaves(); }
+else {
+  window.claude.use('downloads').then(ns => { if (ns) { saver = (filename, data) => ns.save({ filename, data }); enableSaves(); } else noSaves(); }, noSaves);
+}
+async function saveFile(filename, data, statusEl) {
+  if (!saver) return;
+  try {
+    const res = await saver(filename, data);
+    statusEl.textContent = res && res.status === 'delivered' ? `Sent ${filename}.` : `Saved ${filename}.`;
+  } catch (err) {
+    const code = err && err.code;
+    statusEl.textContent = code === 'declined' ? 'Save cancelled.' : code === 'rate_limited' ? 'A save prompt is already open.' : 'This view could not save the file.';
+  }
+}
+$('#save-png').addEventListener('click', async () => {
+  const st = $('#receipt-status'); st.textContent = 'Preparing the image…';
+  try { const blob = await receiptBlob(receiptModel(current)); if (!blob) throw new Error('no image'); st.textContent = ''; await saveFile('tokwatt-receipt.png', blob, st); }
+  catch (e) { st.textContent = 'The image could not be made here. A screenshot of the receipt works too.'; }
+});
+function selectNode(node) { try { const rg = document.createRange(); rg.selectNodeContents(node); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(rg); } catch (e) { /* ignore */ } }
+function copy(text, onOk, onFail) {
+  try { navigator.clipboard.writeText(text).then(onOk, onFail); } catch (e) { onFail(); }
+}
+$('#copy-sum').addEventListener('click', () => {
+  const st = $('#receipt-status'), text = summary(current), ta = $('#copy-fallback');
+  copy(text, () => { ta.hidden = true; st.textContent = 'Summary copied.'; }, () => { ta.hidden = false; ta.value = text; ta.focus(); ta.select(); st.textContent = 'Copy the selected text.'; });
+});
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+  const node = document.getElementById(b.dataset.copy), st = $('#cite-status');
+  copy(node.textContent, () => { st.textContent = 'Copied.'; }, () => { selectNode(node); st.textContent = 'Copy the selected text.'; });
+}));
+
+/* ---------- update loop ---------- */
+let current = compute(), srTimer = 0;
+function update() {
+  current = compute();
+  setCounter(current.c);
+  $('#counter-range').textContent = current.c > 0 ? `Plausible range ${whRange(current.lo, current.hi)}` : 'Add something you did with AI today';
+  $('#example-tag').hidden = state.touched;
+  const g = current.g;
+  $('#grid-hint').textContent = `${sig(+g.carbon_intensity_gco2e_per_kwh, 3)} gCO₂e per kWh, life-cycle, ${g.year} (Our World in Data, from Ember). Data centres serving you may sit on another grid.`;
+  renderReceipt(receiptModel(current));
+  renderBillion(current);
+  drawLadder(current.c);
+  persist();
+  clearTimeout(srTimer);
+  srTimer = setTimeout(() => { $('#sr-total').textContent = `Total ${wh(current.c)} per day.`; }, 700);
+}
+update();
+requestAnimationFrame(() => requestAnimationFrame(() => drumsEl.classList.add('ready')));
+let lastW = Math.round(chart.clientWidth);
+const onResize = () => { const w = Math.round(chart.clientWidth); if (w !== lastW) { lastW = w; drawLadder(current.c); } };
+if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(chart); else window.addEventListener('resize', onResize);
+})();
+</script>
+
+</body>
+</html>

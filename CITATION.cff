@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+type: dataset
+title: "TokWatt: an open, boundary-annotated database of AI inference energy"
+version: 0.1.0
+date-released: 2026-10-25
+license: CC-BY-4.0
+authors:
+  - family-names: "Bahi"
+    given-names: "Abderaouf"
+    affiliation: "LIMA Laboratory"
+    email: "a.bahi@univ-eltarf.dz"
+repository-code: "https://github.com/USERNAME/tokwatt"
+url: "https://USERNAME.github.io/tokwatt/"
+abstract: >-
+  TokWatt collects first-hand estimates of the energy used by AI inference
+  (chat answers, reasoning, long-document queries, agentic tasks, image and
+  video generation, classic ML tasks), records each with its measurement
+  boundary and functional unit, and derives harmonized per-task reference
+  values with reproducible rules. It also provides data-centre electricity
+  indicators, country grid carbon intensities and everyday energy equivalents.
+keywords:
+  - artificial intelligence
+  - energy consumption
+  - inference
+  - data centers
+  - large language models
+  - sustainability
+  - carbon footprint
